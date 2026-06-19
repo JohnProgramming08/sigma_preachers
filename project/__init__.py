@@ -44,9 +44,3 @@ def create_app(config_overlay=None):
     #add_sockets(socket_io)
     
     return socket_io, app
-
-if __name__ == "__main__":
-    config = create_app()
-    socket_io = config[0]
-    app = config[1]
-    socket_io.run(app, debug=True)
