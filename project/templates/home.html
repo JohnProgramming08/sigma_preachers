@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block body %}
+<!-- Header -->
+<header class="row border-bottom border-2">
+    <nav class="navbar navbar-expand-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Sigma Preachers</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sigma_bible">Sigma Bible</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Main -->
+<main class="row d-flex flex-column">
+    <p class="text-center display-5 mb-5">Hello {{ current_user.username }}!</p>
+    <div class="row">
+        <div class="card col-sm-4 bg-light m-2">
+            <div class="card-header bg-light">
+                <h3 class="text-center">New here?</h3>
+            </div>
+            <img class="card-img-top rounded" src="{{ url_for('static', filename='images/SigmaBible.jpg') }}" alt="Dylan Scully">
+            <div class="card-body">
+                <p class="card-text">The first thing you should do is read the sigma bible. This sigma text contains all of the teachings passed down by the sigma. It contains the rules that an aspiring sigma such as yourself must live by and some humble advice, bestowed upon us by the sigma.</p>
+                <div class="d-flex container-fluid justify-content-center">
+                    <a class="btn btn-primary px-5 py-2 mx-auto" href="/sigma_bible">Educate yourself</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -66,3 +66,12 @@ def many_hashed_users_client(many_hashed_users_app):
         session["id"] = 1
 
     return res_client
+
+
+# Client with one logged in user
+@pytest.fixture
+def one_logged_in_client(many_hashed_users_client):
+    data = {"username": "Dylan", "password": "Sigma"}
+    many_hashed_users_client.post("/login", data=data)
+
+    return many_hashed_users_client
