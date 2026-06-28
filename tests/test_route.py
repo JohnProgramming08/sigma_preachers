@@ -107,3 +107,15 @@ def test_home_get_invalid(many_hashed_users_client):
 def test_home_get_valid(one_logged_in_client):
     response = one_logged_in_client.get("/home")
     assert response.status_code == 200
+
+
+# Room page
+def test_room_get_invalid(many_hashed_users_client):
+    response = many_hashed_users_client.get("/room/1", follow_redirects=False)
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_room_get_valid(one_logged_in_client):
+    response = one_logged_in_client.get("/room/1", follow_redirects=False)
+    assert response.status_code == 200

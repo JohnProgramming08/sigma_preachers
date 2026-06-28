@@ -14,4 +14,7 @@ class SignupService:
 
         user_id = Insert.insert_user(self.username, self.hashed_password)
 
+        if user_id != -1:
+            Insert.insert_room_access(user_id, 1)
+
         return user_id != -1

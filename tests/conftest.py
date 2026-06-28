@@ -75,3 +75,39 @@ def one_logged_in_client(many_hashed_users_client):
     many_hashed_users_client.post("/login", data=data)
 
     return many_hashed_users_client
+
+
+# App with one user and one room
+@pytest.fixture
+def one_user_room_app(app):
+    password_hash = HashService.hash("Sigma")
+    with app.app_context():
+        Insert.insert_user("Dylan", password_hash)
+        Insert.insert_room("sigma central")
+
+    return app
+
+
+# App with one room access
+@pytest.fixture
+def one_room_access_app(one_user_room_app):
+    with one_user_room_app.app_context():
+        Insert.insert_room_access(1, 1)
+
+    return one_user_room_app
+
+
+# SocketIO test client
+@pytest.fixture
+def socketio_client(app):
+    socketio, test_app = create_app(
+        {
+            "TESTING": True,
+            "WTF_CSRF_ENABLED": False,  # <--- Disable CSRF for easier testing
+            "SECRET_KEY": "test-secret",
+            "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
+        }
+    )
+
+    test_client = socketio.test_client(test_app)
+    return test_client

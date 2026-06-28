@@ -48,3 +48,46 @@ def test_select_user_valid(
 def test_select_user_invalid(many_unhashed_users_app, username, password_hash):
     with many_unhashed_users_app.app_context():
         assert Select.select_user(username, password_hash) == None
+
+
+# Fetching all rooms a user can access
+def test_select_accessible_rooms_valid(one_room_access_app):
+    with one_room_access_app.app_context():
+        assert len(Select.select_accessible_rooms(1)) == 1
+
+
+@pytest.mark.parametrize("user_id", range(2, 10))
+def test_select_accessible_rooms_invalid(one_room_access_app, user_id):
+    with one_room_access_app.app_context():
+        assert len(Select.select_accessible_rooms(user_id)) == 0
+
+
+def test_select_accessible_rooms_mixed(one_room_access_app):
+    with one_room_access_app.app_context():
+        for i in range(10):
+            if i == 1:
+                assert len(Select.select_accessible_rooms(i)) == 1
+            else:
+                assert len(Select.select_accessible_rooms(i)) == 0
+
+
+# Fetching the room with the given room id
+def test_select_room_valid(one_room_access_app):
+    with one_room_access_app.app_context():
+        assert Select.select_room(1) is not None
+        assert Select.select_room(2) is not None
+
+
+@pytest.mark.parametrize("room_id", range(3, 10))
+def test_select_room_invalid(one_room_access_app, room_id):
+    with one_room_access_app.app_context():
+        assert Select.select_room(room_id) is None
+
+
+def test_select_room_mixed(one_room_access_app):
+    with one_room_access_app.app_context():
+        for room_id in range(10):
+            if room_id in [1, 2]:
+                assert Select.select_room(room_id) is not None
+            else:
+                assert Select.select_room(room_id) is None

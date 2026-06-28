@@ -3,9 +3,10 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_socketio import SocketIO
 from flask_login import LoginManager
-#from .services import add_sockets
+
+from .services import WebsocketService
 from .routes import register_blueprints
-from .database import db, User
+from .database import db, User, Insert
 
 
 def create_app(config_overlay=None):
@@ -25,6 +26,10 @@ def create_app(config_overlay=None):
     db.init_app(app)
     with app.app_context():
         db.create_all()
+        try:
+            Insert.insert_room("Global")
+        except:
+            pass
 
     # Register blueprints/routes
     register_blueprints(app)
@@ -38,9 +43,27 @@ def create_app(config_overlay=None):
     def load_user(user_id):
         return User.query.filter(User.id == int(user_id)).first()
 
-
     # Implement specific websocket logic
-    socket_io = SocketIO(app)
-    #add_sockets(socket_io)
-    
-    return socket_io, app
+    socketio = SocketIO(app)
+
+    @socketio.on("join")
+    def handle_join(data):
+        print(data)
+        username = data["username"]
+        room_name = data["room_name"]
+        WebsocketService.join(username, room_name)
+
+    @socketio.on("leave")
+    def handle_leave(data):
+        username = data["username"]
+        room_name = data["room_name"]
+        WebsocketService.leave(username, room_name)
+
+    @socketio.on("message")
+    def handle_message(data):
+        username = data["username"]
+        room_name = data["room_name"]
+        message = data["message"]
+        WebsocketService.message(username, room_name, message)
+
+    return socketio, app
