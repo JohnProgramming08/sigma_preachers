@@ -150,7 +150,7 @@ def test_join(socketio_client):
     received = socketio_client.get_received()
 
     assert received[0]["name"] == "message"
-    assert received[0]["args"] == "SERVER: Sigma joined the chat"
+    assert received[0]["args"]["message"] == "Sigma joined the chat"
 
 
 def test_message(socketio_client):

@@ -48,7 +48,6 @@ def create_app(config_overlay=None):
 
     @socketio.on("join")
     def handle_join(data):
-        print(data)
         username = data["username"]
         room_name = data["room_name"]
         WebsocketService.join(username, room_name)
