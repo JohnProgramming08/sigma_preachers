@@ -1,4 +1,4 @@
-from .create_db import User
+from .create_db import User, RoomAccess, Room
 
 
 class Select:
@@ -17,3 +17,22 @@ class Select:
         ).first()
 
         return found_user
+
+    # Return all rooms a user can access
+    @staticmethod
+    def select_accessible_rooms(user_id: int) -> list:
+        accessible_rooms = RoomAccess.query.filter(
+            RoomAccess.user_id == user_id
+        ).all()
+
+        rooms = []
+        for room in accessible_rooms:
+            rooms.append(Room.query.filter(Room.id == room.room_id).first())
+
+        return rooms
+
+    # Return the room with a given room id
+    @staticmethod
+    def select_room(room_id: int) -> Room | None:
+        found_room = Room.query.filter(Room.id == room_id).first()
+        return found_room
