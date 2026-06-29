@@ -119,3 +119,19 @@ def test_room_get_invalid(many_hashed_users_client):
 def test_room_get_valid(one_logged_in_client):
     response = one_logged_in_client.get("/room/1", follow_redirects=False)
     assert response.status_code == 200
+
+
+# View profile page
+def test_view_profile_get_invalid(many_hashed_users_client):
+    response = many_hashed_users_client.get(
+        "/view_profile/2", follow_redirects=False
+    )
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_view_profile_get_valid(one_logged_in_client):
+    response = one_logged_in_client.get(
+        "/view_profile/2", follow_redirects=False
+    )
+    assert response.status_code == 200

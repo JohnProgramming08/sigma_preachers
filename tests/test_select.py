@@ -91,3 +91,16 @@ def test_select_room_mixed(one_room_access_app):
                 assert Select.select_room(room_id) is not None
             else:
                 assert Select.select_room(room_id) is None
+
+
+# Fetching a user object using an id
+@pytest.mark.parametrize("user_id", range(1, 4))
+def test_select_user_with_id_valid(many_unhashed_users_app, user_id):
+    with many_unhashed_users_app.app_context():
+        assert Select.select_user_with_id(user_id) is not None
+
+
+@pytest.mark.parametrize("user_id", range(4, 11))
+def test_select_user_with_id_invalid(many_unhashed_users_app, user_id):
+    with many_unhashed_users_app.app_context():
+        assert Select.select_user_with_id(user_id) is None

@@ -5,6 +5,7 @@ from project.services import (
     HomeService,
     WebsocketService,
     RoomService,
+    ViewProfileService,
 )
 from project.database import User
 
@@ -195,3 +196,18 @@ def test_get_room_mixed(one_room_access_app):
                 assert service.get_room() is not None
             else:
                 assert service.get_room() is None
+
+
+# ViewProfileService
+@pytest.mark.parametrize("user_id", range(1, 4))
+def test_get_user_object_valid(many_hashed_users_app, user_id):
+    service = ViewProfileService(user_id)
+    with many_hashed_users_app.app_context():
+        assert service.get_user_object() is not None
+
+
+@pytest.mark.parametrize("user_id", range(4, 11))
+def test_get_user_object_invaild(many_hashed_users_app, user_id):
+    service = ViewProfileService(user_id)
+    with many_hashed_users_app.app_context():
+        assert service.get_user_object() is None
