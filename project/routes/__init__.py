@@ -4,6 +4,7 @@ from .login import login_bp
 from .home import home_bp
 from .room import room_bp
 from .view_profile import view_profile_bp
+from .edit_profile import edit_profile_bp
 
 
 def register_blueprints(app):
@@ -14,6 +15,7 @@ def register_blueprints(app):
         home_bp,
         room_bp,
         view_profile_bp,
+        edit_profile_bp,
     ]
 
     for bp in blueprints:

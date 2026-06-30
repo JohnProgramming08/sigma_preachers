@@ -6,6 +6,7 @@ from project.services import (
     WebsocketService,
     RoomService,
     ViewProfileService,
+    EditProfileService,
 )
 from project.database import User
 
@@ -211,3 +212,37 @@ def test_get_user_object_invaild(many_hashed_users_app, user_id):
     service = ViewProfileService(user_id)
     with many_hashed_users_app.app_context():
         assert service.get_user_object() is None
+
+
+# EditProfileService
+@pytest.mark.parametrize("user_id", range(1, 4))
+def test_update_profile_valid(many_hashed_users_app, user_id):
+    data = {
+        "username": "testy",
+        "status": "Sigma",
+        "gender": "Male",
+        "age": 654,
+        "location": "Outside ur house",
+        "bio": "I am so sigumah wigumah ong ong",
+    }
+    service = EditProfileService(user_id, data)
+
+    with many_hashed_users_app.app_context():
+        assert service.update_profile() is True
+
+
+def test_update_profile_invalid(many_hashed_users_app):
+    data = {
+        "username": "testy",
+        "status": "Sigma",
+        "gender": "Male",
+        "age": 654,
+        "location": "Outside ur house",
+        "bio": "I am so sigumah wigumah ong ong",
+    }
+    service1 = EditProfileService(4, data)
+    service2 = EditProfileService(1, {})
+
+    with many_hashed_users_app.app_context():
+        assert service1.update_profile() is False
+        assert service2.update_profile() is False

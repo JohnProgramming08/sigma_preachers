@@ -10,13 +10,14 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(67), unique=True, nullable=False)
     password = db.Column(db.Integer, nullable=False)  # Only store password hash
-    status = db.Column(db.String(20), default="standard user")
-    gender = db.Column(db.String(67), default="sigma/male")
-    age = db.Column(db.Integer, default=-1)
-    location = db.Column(db.String(67), default="private")
+    status = db.Column(db.String(20), default="standard user", nullable=False)
+    gender = db.Column(db.String(67), default="sigma/male", nullable=False)
+    age = db.Column(db.Integer, default=-1, nullable=False)
+    location = db.Column(db.String(67), default="private", nullable=False)
     bio = db.Column(
         db.String(255),
         default="This person is too busy chatting to write a bio!",
+        nullable=False,
     )
 
     room_access = db.relationship("RoomAccess", backref="user")

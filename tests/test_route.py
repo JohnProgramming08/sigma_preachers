@@ -135,3 +135,66 @@ def test_view_profile_get_valid(one_logged_in_client):
         "/view_profile/2", follow_redirects=False
     )
     assert response.status_code == 200
+
+
+# Edit profile page
+def test_edit_profile_get_invalid(many_hashed_users_client):
+    response = many_hashed_users_client.get(
+        "/edit_profile", follow_redirects=False
+    )
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_edit_profile_get_valid(one_logged_in_client):
+    response = one_logged_in_client.get("/edit_profile", follow_redirects=False)
+    assert response.status_code == 200
+
+
+@pytest.mark.parametrize(
+    "username, gender, age, location, bio",
+    [
+        ("Sigumah", "Male", 18, "ur mums house", "creepy bio stalker istg"),
+        ("Nikki", "Female", 24, "my house", "What a sick bio"),
+        ("Dodo Dodo Dodo", "Bird", 124, "some island", "very deadeded"),
+    ],
+)
+def test_edit_profile_post_valid(
+    one_logged_in_client, username, gender, age, location, bio
+):
+    data = {
+        "username": username,
+        "gender": gender,
+        "age": age,
+        "location": location,
+        "bio": bio,
+    }
+    response = one_logged_in_client.post(
+        "/edit_profile", data=data, follow_redirects=False
+    )
+    assert response.status_code == 302
+    assert "/view_profile" in response.headers["Location"]
+
+
+@pytest.mark.parametrize(
+    "username, location, bio",
+    [
+        ("bad", "VALID", "Perfectly fine"),
+        ("super good", "nope", "validity"),
+        ("fined", "also fine", "No"),
+    ],
+)
+def test_edit_profile_post_invalid(
+    one_logged_in_client, username, location, bio
+):
+    data = {
+        "username": username,
+        "gender": "Sigumah wigumah",
+        "age": 12,
+        "location": location,
+        "bio": bio,
+    }
+    response = one_logged_in_client.post(
+        "/edit_profile", data=data, follow_redirects=False
+    )
+    assert response.status_code == 200
