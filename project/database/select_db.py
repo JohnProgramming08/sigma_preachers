@@ -36,3 +36,9 @@ class Select:
     def select_room(room_id: int) -> Room | None:
         found_room = Room.query.filter(Room.id == room_id).first()
         return found_room
+
+    # Return the user object of a given id
+    @staticmethod
+    def select_user_with_id(user_id: int) -> User:
+        found_user = User.query.filter(User.id == user_id).first()
+        return found_user
