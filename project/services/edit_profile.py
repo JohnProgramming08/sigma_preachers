@@ -1,4 +1,4 @@
-from project.database import Update
+from project.database import Update, Select
 
 
 class EditProfileService:
@@ -8,4 +8,7 @@ class EditProfileService:
 
     # Update the users profile, returning if its a success
     def update_profile(self) -> bool:
+        if Select.username_exists(self.new_details.get("username")):
+            return False
+
         return Update.update_user_profile(self.user_id, self.new_details)

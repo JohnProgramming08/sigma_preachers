@@ -12,6 +12,7 @@ def edit_profile():
     form = EditProfileForm()
     # User has not submitted a valid form
     if not form.validate_on_submit():
+        form.bio.data = current_user.bio
         return render_template("edit_profile.html", form=form)
 
     # User has submitted a valid form
@@ -31,5 +32,5 @@ def edit_profile():
         )
 
     # Profile update failed
-    flash("warning", "That username is already taken.")
+    flash("That username is already taken.", "warning")
     return render_template("edit_profile.html", form=form)
