@@ -4,7 +4,7 @@ from flask import Flask
 from flask_socketio import SocketIO
 from flask_login import LoginManager
 
-from .services import WebsocketService
+from .services import WebsocketService, SignupService
 from .routes import register_blueprints
 from .database import db, User, Insert
 
