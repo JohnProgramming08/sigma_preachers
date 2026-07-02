@@ -62,7 +62,7 @@
             </div>
             {% if current_user.username == "MASTER" and not own_profile %}
             <div class="d-flex justify-content-center" style="width: 100%">
-                <a href="/promote_user" class="btn btn-primary py-2 mt-3 px-5 mx-auto">Promote</a>
+                <a href="/promote_user/{{ user_details.id }}" class="btn btn-primary py-2 mt-3 px-5 mx-auto">Promote</a>
             </div>
             {% endif %}
         </div>

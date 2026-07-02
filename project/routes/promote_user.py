@@ -20,7 +20,7 @@ def promote_user(user_id: int):
     # User has not submitted a valid form
     if not form.validate_on_submit():
         return render_template(
-            "promote_user.html", form=form, user_data=user_data
+            "promote_user.html", form=form, user_details=user_data
         )
 
     # User has submitted a valid form

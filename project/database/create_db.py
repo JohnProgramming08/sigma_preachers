@@ -10,7 +10,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(67), unique=True, nullable=False)
     password = db.Column(db.Integer, nullable=False)  # Only store password hash
-    status = db.Column(db.String(20), default="standard user", nullable=False)
+    status = db.Column(db.String(20), default="STANDARD USER", nullable=False)
     gender = db.Column(db.String(67), default="sigma/male", nullable=False)
     age = db.Column(db.Integer, default=-1, nullable=False)
     location = db.Column(db.String(67), default="private", nullable=False)
