@@ -21,3 +21,15 @@ class Update:
 
         except:
             return False
+
+    # Change a users status, returning if it was a success
+    @staticmethod
+    def update_user_status(user_id: int, new_status: str) -> bool:
+        user = User.query.filter(User.id == user_id).first()
+        if user is None:
+            return False
+
+        user.status = new_status
+        db.session.commit()
+
+        return True

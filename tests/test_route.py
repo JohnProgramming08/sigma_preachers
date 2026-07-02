@@ -198,3 +198,34 @@ def test_edit_profile_post_invalid(
         "/edit_profile", data=data, follow_redirects=False
     )
     assert response.status_code == 200
+
+
+# Promote user page
+def test_promote_user_get_invalid1(many_hashed_users_client):
+    response = many_hashed_users_client.get(
+        "/promote_user/2", follow_redirects=False
+    )
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_promote_user_get_invalid2(one_logged_in_client):
+    response = one_logged_in_client.get(
+        "/promote_user/2", follow_redirects=False
+    )
+    assert response.status_code == 302
+    assert "/home" in response.headers["Location"]
+
+
+def test_promote_user_get_valid(logged_in_master_client):
+    response = logged_in_master_client.get("/promote_user/2")
+    assert response.status_code == 200
+
+
+def test_promote_user_post(logged_in_master_client):
+    data = {"status": "ADMIN"}
+    response = logged_in_master_client.post(
+        "/promote_user/2", data=data, follow_redirects=False
+    )
+    assert response.status_code == 302
+    assert "/view_profile" in response.headers["Location"]

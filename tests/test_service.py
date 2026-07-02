@@ -7,6 +7,8 @@ from project.services import (
     RoomService,
     ViewProfileService,
     EditProfileService,
+    MasterService,
+    PromoteUserService,
 )
 from project.database import User
 
@@ -246,3 +248,46 @@ def test_update_profile_invalid(many_hashed_users_app):
     with many_hashed_users_app.app_context():
         assert service1.update_profile() is False
         assert service2.update_profile() is False
+
+
+# MasterService
+def test_add_master_valid(many_hashed_users_app):
+    service = MasterService()
+    with many_hashed_users_app.app_context():
+        assert service.add_master() is True
+
+
+def test_add_master_mixed(many_hashed_users_app):
+    service = MasterService()
+    with many_hashed_users_app.app_context():
+        assert service.add_master() is True
+        assert service.add_master() is False
+
+
+# PromoteUserService
+@pytest.mark.parametrize("user_id", range(1, 4))
+def test_get_user_object_valid(many_hashed_users_app, user_id):
+    service = PromoteUserService(user_id)
+    with many_hashed_users_app.app_context():
+        assert service.get_user_object() is not None
+
+
+@pytest.mark.parametrize("user_id", range(4, 11))
+def test_get_user_object_invalid(many_hashed_users_app, user_id):
+    service = PromoteUserService(user_id)
+    with many_hashed_users_app.app_context():
+        assert service.get_user_object() is None
+
+
+@pytest.mark.parametrize("user_id", range(1, 4))
+def test_promote_user_valid(many_hashed_users_app, user_id):
+    service = PromoteUserService(user_id)
+    with many_hashed_users_app.app_context():
+        assert service.promote_user("super sigma") is True
+
+
+@pytest.mark.parametrize("user_id", range(4, 11))
+def test_promote_user_invalid(many_hashed_users_app, user_id):
+    service = PromoteUserService(user_id)
+    with many_hashed_users_app.app_context():
+        assert service.promote_user("super sigma") is False

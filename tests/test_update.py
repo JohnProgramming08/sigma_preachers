@@ -45,3 +45,25 @@ def test_update_user_profile_invalid(
             temp_data.pop(keys[i])
             with many_hashed_users_app.app_context():
                 assert Update.update_user_profile(user_id, data) is False
+
+
+# Changing a users status
+@pytest.mark.parametrize(
+    "user_id, status",
+    [
+        (1, "MASTER"),
+        (1, "master"),
+        (2, "s"),
+        (2, "this one has spaces"),
+        (3, "this one is mad long i cant lie like oh my lordie lord"),
+    ],
+)
+def test_update_user_status_valid(many_hashed_users_app, user_id, status):
+    with many_hashed_users_app.app_context():
+        assert Update.update_user_status(user_id, status) is True
+
+
+@pytest.mark.parametrize("user_id", range(4, 11))
+def update_user_status_invalid(many_hashed_users_app, user_id):
+    with many_hashed_users_app.app_context():
+        assert Update.update_user_status(user_id, "Valid") is False

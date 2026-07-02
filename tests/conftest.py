@@ -1,7 +1,7 @@
 import pytest
 from project import create_app
 from project.database import Insert
-from project.services import HashService
+from project.services import HashService, MasterService
 
 
 @pytest.fixture
@@ -110,4 +110,19 @@ def socketio_client(app):
     )
 
     test_client = socketio.test_client(test_app)
+    return test_client
+
+
+# Logged in master client, where master id is 4
+@pytest.fixture
+def logged_in_master_client(many_hashed_users_app):
+    service = MasterService()
+    with many_hashed_users_app.app_context():
+        service.add_master()
+
+    test_client = many_hashed_users_app.test_client()
+    test_client.post(
+        "/login", data={"username": "MASTER", "password": "MASTER"}
+    )
+
     return test_client
