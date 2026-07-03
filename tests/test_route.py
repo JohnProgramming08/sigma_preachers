@@ -229,3 +229,22 @@ def test_promote_user_post(logged_in_master_client):
     )
     assert response.status_code == 302
     assert "/view_profile" in response.headers["Location"]
+
+
+# Search users api page
+@pytest.mark.parametrize(
+    "username_start, start",
+    [
+        ("Dylan", 0),
+        ("Dylan", 1),
+        ("Dyl", 0),
+        ("Dyl", 1),
+        ("Random", 0),
+        ("Defo not it and also pretty long as well", 100),
+    ],
+)
+def test_search_users_api_post(many_hashed_users_client, username_start, start):
+    response = many_hashed_users_client.post(
+        f"/search_users_api/{username_start}/{start}"
+    )
+    assert response.status_code == 200

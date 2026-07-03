@@ -6,6 +6,8 @@ from .room import room_bp
 from .view_profile import view_profile_bp
 from .edit_profile import edit_profile_bp
 from .promote_user import promote_user_bp
+from .search_users import search_users_bp
+from .search_users_api import search_users_api_bp
 
 
 def register_blueprints(app):
@@ -18,6 +20,8 @@ def register_blueprints(app):
         view_profile_bp,
         edit_profile_bp,
         promote_user_bp,
+        search_users_bp,
+        search_users_api_bp,
     ]
 
     for bp in blueprints:

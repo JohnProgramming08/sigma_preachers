@@ -104,3 +104,28 @@ def test_select_user_with_id_valid(many_unhashed_users_app, user_id):
 def test_select_user_with_id_invalid(many_unhashed_users_app, user_id):
     with many_unhashed_users_app.app_context():
         assert Select.select_user_with_id(user_id) is None
+
+
+# Fetching 10 users whose username contain a given string
+@pytest.mark.parametrize(
+    "username_start, start, expected_length",
+    [
+        ("Dyl", 0, 1),
+        ("Dylan", 0, 1),
+        ("Dyl", 10, 0),
+        ("Dylan", 10, 0),
+        ("With a", 0, 1),
+        ("With a", 1, 0),
+        ("With a ", 2, 0),
+        ("Nopity nope", 0, 0),
+        ("Va", 1, 0),
+    ],
+)
+def test_select_users_with_username(
+    many_hashed_users_app, username_start, start, expected_length
+):
+    with many_hashed_users_app.app_context():
+        assert (
+            len(Select.select_users_with_username(username_start, start))
+            == expected_length
+        )

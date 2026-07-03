@@ -42,3 +42,20 @@ class Select:
     def select_user_with_id(user_id: int) -> User:
         found_user = User.query.filter(User.id == user_id).first()
         return found_user
+
+    # Select the next 10 user_ids and usernames with a given username start
+    @staticmethod
+    def select_users_with_username(username_start: str, start: int) -> list:
+        found_users = (
+            User.query.filter(User.username.startswith(username_start))
+            .order_by(User.id)
+            .offset(start)
+            .limit(10)
+            .all()
+        )
+
+        res = []
+        for user in found_users:
+            res.append([user.id, user.username])
+
+        return res
