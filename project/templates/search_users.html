@@ -12,13 +12,13 @@
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/home">Home</a>
+                        <a class="nav-link" href="/home">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/view_profile/{{ current_user.id }}">Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/search_users">Search users</a>
+                        <a class="nav-link active" href="/search_users">Search users</a>
                     </li>
                 </ul>
             </div>
@@ -27,17 +27,20 @@
 </header>
 
 <!-- Main -->
-<main>
-    <div id="messages" class="row d-flex flex-column" style="margin-bottom: 20vh;"></div>
-    <form class="fixed-bottom container d-flex flex-row p-3" style="background-color: white;" onsubmit="return false">
-        <input id="msg" type="text" placeholder="Enter your message" class="form-control rounded-end-0">
-        <button onclick="sendMessage()" class="btn btn-success rounded-start-0">Send</button>
+<main class="mt-5">
+    <form class="row d-flex mb-5" onsubmit="return false;">
+        <input type="text" class="form-control d-inline rounded-end-0" placeholder="Search usernames" name="username_start" style="width: 80%" id="username">
+        <input type="submit" class="btn btn-success d-inline rounded-start-0" onclick="search()" style="width: 20%" id="submit" value="Search">
     </form>
-</main>
 
-<script>
-    window.username = {{ current_user.username | tojson}};
-    window.room_name = {{ room_name  | tojson}};
-</script>
-<script src="{{ url_for('static', filename='js/room.js') }}"></script>
+    <h2 class="text-center">Users</h2>
+    <table class="table table-hover rounded">
+        <tbody id="table">
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center d-block my-5">
+        <button class="btn btn-primary mx-auto px-5 d-inline" onclick="loadMore()" id="load-more">Load more</button>
+    </div>
+</main>
+<script src="{{ url_for('static', filename='js/search_users.js') }}"></script>
 {% endblock %}

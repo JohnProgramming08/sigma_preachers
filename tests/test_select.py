@@ -129,3 +129,14 @@ def test_select_users_with_username(
             len(Select.select_users_with_username(username_start, start))
             == expected_length
         )
+
+
+# Fetching 10 users
+@pytest.mark.parametrize("start", range(10))
+def test_select_10_users(many_hashed_users_app, start):
+    with many_hashed_users_app.app_context():
+        expected = 3 - start
+        if start > 2:
+            expected = 0
+
+        assert len(Select.select_10_users(start)) == expected

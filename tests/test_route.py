@@ -248,3 +248,9 @@ def test_search_users_api_post(many_hashed_users_client, username_start, start):
         f"/search_users_api/{username_start}/{start}"
     )
     assert response.status_code == 200
+
+
+@pytest.mark.parametrize("start", range(10))
+def test_search_all_users_api_post(many_hashed_users_client, start):
+    response = many_hashed_users_client.post(f"/search_users_api/{start}")
+    assert response.status_code == 200

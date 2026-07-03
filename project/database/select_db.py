@@ -59,3 +59,20 @@ class Select:
             res.append([user.id, user.username])
 
         return res
+
+    # Select the next 10 users
+    @staticmethod
+    def select_10_users(start: int) -> list:
+        found_users = (
+            User.query.filter(User.id > 0)
+            .order_by(User.id)
+            .offset(start)
+            .limit(10)
+            .all()
+        )
+
+        res = []
+        for user in found_users:
+            res.append([user.id, user.username])
+
+        return res

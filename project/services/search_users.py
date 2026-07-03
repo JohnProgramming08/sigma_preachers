@@ -8,9 +8,13 @@ class SearchUsersService:
 
     # Fetch the next 10 users whose usernames start with username_start
     def fetch_next_10_users(self) -> dict:
-        user_pairs = Select.select_users_with_username(
-            self.username_start, self.start
-        )
+        if self.username_start.strip() == "":
+            user_pairs = Select.select_10_users(self.start)
+        else:
+            user_pairs = Select.select_users_with_username(
+                self.username_start, self.start
+            )
+
         res = {}
         for pair in user_pairs:
             res[pair[1]] = pair[0]

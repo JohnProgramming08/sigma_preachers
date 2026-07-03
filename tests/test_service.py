@@ -307,6 +307,7 @@ def test_promote_user_invalid(many_hashed_users_app, user_id):
         ("With a ", 2, 0),
         ("Nopity nope", 0, 0),
         ("Va", 1, 0),
+        ("", 0, 3),
     ],
 )
 def test_fetch_next_10_users(
