@@ -8,7 +8,6 @@ class PromoteUserForm(FlaskForm):
         "Status",
         choices=[
             ("STANDARD USER", "STANDARD USER"),
-            ("MODERATOR", "MODERATOR"),
             ("ADMIN", "ADMIN"),
         ],
         validators=[DataRequired()],

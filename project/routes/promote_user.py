@@ -10,7 +10,7 @@ promote_user_bp = Blueprint("promote_user", __name__)
 @login_required
 def promote_user(user_id: int):
     # User is not a high enough status
-    if current_user.status not in ["MASTER", "ADMIN"]:
+    if current_user.status != "MASTER":
         flash("You do not have access to that page.", "warning")
         return redirect(url_for("home.home"))
 
