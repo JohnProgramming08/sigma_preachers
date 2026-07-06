@@ -140,3 +140,31 @@ def test_select_10_users(many_hashed_users_app, start):
             expected = 0
 
         assert len(Select.select_10_users(start)) == expected
+
+
+# Checking if a user is banned
+@pytest.mark.parametrize("user_id, banned", [(1, True), (2, False), (3, False)])
+def test_is_banned_valid(one_banned_user_app, user_id, banned):
+    with one_banned_user_app.app_context():
+        assert Select.is_banned(user_id) == banned
+
+
+@pytest.mark.parametrize("user_id", range(4, 11))
+def test_is_banned_invalid(one_banned_user_app, user_id):
+    with one_banned_user_app.app_context():
+        assert Select.is_banned(user_id) is True
+
+
+# Checking if a users ban has ended
+@pytest.mark.parametrize(
+    "user_id, expected", [(1, False), (2, True), (3, True)]
+)
+def test_has_ban_ended_valid(one_banned_user_app, user_id, expected):
+    with one_banned_user_app.app_context():
+        assert Select.has_ban_ended(user_id) == expected
+
+
+@pytest.mark.parametrize("user_id", range(4, 11))
+def test_has_ban_ended_invalid(one_banned_user_app, user_id):
+    with one_banned_user_app.app_context():
+        assert Select.has_ban_ended(user_id) is False

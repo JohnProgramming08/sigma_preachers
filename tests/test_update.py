@@ -67,3 +67,31 @@ def test_update_user_status_valid(many_hashed_users_app, user_id, status):
 def update_user_status_invalid(many_hashed_users_app, user_id):
     with many_hashed_users_app.app_context():
         assert Update.update_user_status(user_id, "Valid") is False
+
+
+# Banning a user
+@pytest.mark.parametrize(
+    "user_id, duration",
+    [(1, 0), (1, 100), (1, 31536000), (2, 12345), (3, 3)],
+)
+def test_ban_user_valid(many_hashed_users_app, user_id, duration):
+    with many_hashed_users_app.app_context():
+        assert Update.ban_user(user_id, duration) is True
+
+
+@pytest.mark.parametrize("user_id", range(4, 11))
+def test_ban_user_invalid(many_hashed_users_app, user_id):
+    with many_hashed_users_app.app_context():
+        assert Update.ban_user(user_id, 100) is False
+
+
+@pytest.mark.parametrize("user_id", range(1, 4))
+def test_unban_user_valid(many_hashed_users_app, user_id):
+    with many_hashed_users_app.app_context():
+        assert Update.unban_user(user_id) is True
+
+
+@pytest.mark.parametrize("user_id", range(4, 11))
+def test_unban_user_invalid(many_hashed_users_app, user_id):
+    with many_hashed_users_app.app_context():
+        assert Update.unban_user(user_id) is False

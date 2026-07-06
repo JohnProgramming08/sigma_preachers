@@ -10,6 +10,7 @@ from project.services import (
     MasterService,
     PromoteUserService,
     SearchUsersService,
+    BanService,
 )
 from project.database import User
 
@@ -316,3 +317,112 @@ def test_fetch_next_10_users(
     service = SearchUsersService(username_start, start)
     with many_hashed_users_app.app_context():
         assert len(service.fetch_next_10_users()) == expected_length
+
+
+# BanService
+@pytest.mark.parametrize(
+    "duration, seconds",
+    [
+        ("1 day", 3600 * 24),
+        ("3 days", 3600 * 24 * 3),
+        ("1 hour", 3600),
+        ("67 hours", 3600 * 67),
+        ("4 weeks", 3600 * 24 * 7 * 4),
+        ("1 week", 3600 * 24 * 7),
+        ("1 month", 3600 * 24 * 28),
+        ("3 months", 3600 * 24 * 28 * 3),
+        ("1 year", 3600 * 24 * 365),
+        ("7 years", 3600 * 24 * 365 * 7),
+    ],
+)
+def test_get_ban_length_valid(duration, seconds):
+    service = BanService(67)
+    assert service.get_ban_length(duration) == seconds
+
+
+@pytest.mark.parametrize(
+    "duration", ["ur mum", "3 hourglasses", "67 minutes", "-1 day"]
+)
+def test_get_ban_length_invalid(duration):
+    service = BanService(1)
+    assert service.get_ban_length(duration) == 0
+
+
+@pytest.mark.parametrize(
+    "user_id, duration",
+    [
+        (1, "1 day"),
+        (1, "67 years"),
+        (2, "3 hours"),
+        (2, "1 week"),
+        (3, "5 days"),
+        (3, "2 weeks"),
+    ],
+)
+def test_ban_user_valid(many_hashed_users_app, user_id, duration):
+    service = BanService(user_id)
+    with many_hashed_users_app.app_context():
+        assert service.ban_user(duration) is True
+
+
+@pytest.mark.parametrize(
+    "user_id, duration",
+    [
+        (1, "day"),
+        (1, "super sigma"),
+        (1, "2 minutes"),
+        (3, "democracy"),
+        (4, "1 day"),
+        (4, "3 hours"),
+        (4, "super invalid ong"),
+        (67, ""),
+    ],
+)
+def test_ban_user_invalid(many_hashed_users_app, user_id, duration):
+    service = BanService(user_id)
+    with many_hashed_users_app.app_context():
+        assert service.ban_user(duration) is False
+
+
+@pytest.mark.parametrize("user_id, expected", [(1, True), (2, True), (3, True)])
+def test_unban_user_valid(one_banned_user_app, user_id, expected):
+    service = BanService(user_id)
+    with one_banned_user_app.app_context():
+        assert service.unban_user() == expected
+
+
+@pytest.mark.parametrize("user_id", range(4, 11))
+def test_unban_user_invalid(one_banned_user_app, user_id):
+    service = BanService(user_id)
+    with one_banned_user_app.app_context():
+        assert service.unban_user() is False
+
+
+@pytest.mark.parametrize(
+    "user_id, expected", [(1, True), (2, False), (3, False)]
+)
+def test_is_user_banned_valid(one_banned_user_app, user_id, expected):
+    service = BanService(user_id)
+    with one_banned_user_app.app_context():
+        assert service.is_user_banned() == expected
+
+
+@pytest.mark.parametrize("user_id", range(4, 11))
+def test_is_user_banned_invalid(one_banned_user_app, user_id):
+    service = BanService(user_id)
+    with one_banned_user_app.app_context():
+        assert service.is_user_banned() is True
+
+
+@pytest.mark.parametrize("user_id", range(1, 4))
+def test_get_user_details_valid(many_hashed_users_app, user_id):
+    service = BanService(user_id)
+    with many_hashed_users_app.app_context():
+        assert service.get_user_details() is not None
+
+
+@pytest.mark.parametrize("user_id", range(4, 11))
+def test_get_user_details_invalid(many_hashed_users_app, user_id):
+    service = BanService(user_id)
+    with many_hashed_users_app.app_context():
+        assert service.get_user_details() is None

@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -19,6 +20,9 @@ class User(UserMixin, db.Model):
         default="This person is too busy chatting to write a bio!",
         nullable=False,
     )
+    banned = db.Column(db.Boolean, default=False, nullable=False)
+    # Default for ban end should really be 0
+    ban_end = db.Column(db.Integer, default=int(datetime.now().timestamp()))
 
     room_access = db.relationship("RoomAccess", backref="user")
 

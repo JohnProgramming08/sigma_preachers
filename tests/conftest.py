@@ -1,6 +1,6 @@
 import pytest
 from project import create_app
-from project.database import Insert
+from project.database import Insert, Update
 from project.services import HashService, MasterService
 
 
@@ -126,3 +126,12 @@ def logged_in_master_client(many_hashed_users_app):
     )
 
     return test_client
+
+
+# App with one user banned, two not banned
+@pytest.fixture
+def one_banned_user_app(many_hashed_users_app):
+    with many_hashed_users_app.app_context():
+        Update.ban_user(1, 6767)
+
+    return many_hashed_users_app

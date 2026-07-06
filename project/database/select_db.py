@@ -1,4 +1,5 @@
 from .create_db import User, RoomAccess, Room
+from datetime import datetime
 
 
 class Select:
@@ -76,3 +77,25 @@ class Select:
             res.append([user.id, user.username])
 
         return res
+
+    # Return whether or not a user is banned
+    @staticmethod
+    def is_banned(user_id: int) -> bool:
+        user = User.query.filter(User.id == user_id).first()
+        if user is None:
+            return True
+
+        return user.banned
+
+    # Return whether or not a users ban has ended
+    @staticmethod
+    def has_ban_ended(user_id: int) -> bool:
+        user = User.query.filter(User.id == user_id).first()
+        if user is None:
+            return False
+
+        current_time = int(datetime.now().timestamp())
+        if current_time >= user.ban_end:
+            return True
+
+        return False

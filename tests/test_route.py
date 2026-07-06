@@ -254,3 +254,49 @@ def test_search_users_api_post(many_hashed_users_client, username_start, start):
 def test_search_all_users_api_post(many_hashed_users_client, start):
     response = many_hashed_users_client.post(f"/search_users_api/{start}")
     assert response.status_code == 200
+
+
+# Ban user page
+def test_ban_user_get_invalid1(many_hashed_users_client):
+    response = many_hashed_users_client.get("/ban_user/1")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_ban_user_get_invalid2(one_logged_in_client):
+    response = one_logged_in_client.get("/ban_user/2")
+    assert response.status_code == 302
+    assert "/home" in response.headers["Location"]
+
+
+def test_ban_user_get_valid(logged_in_master_client):
+    response = logged_in_master_client.get("/ban_user/2")
+    assert response.status_code == 200
+
+
+@pytest.mark.parametrize(
+    "duration",
+    [
+        "1 hour",
+        "3 hours",
+        "1 day",
+        "3 days",
+        "1 week",
+        "2 weeks",
+        "1 month",
+        "3 months",
+        "6 months",
+        "1 year",
+    ],
+)
+def test_ban_user_post_valid(logged_in_master_client, duration):
+    data = {"duration": duration}
+    response = logged_in_master_client.post("/ban_user/2", data=data)
+
+    assert response.status_code == 302
+    assert "/view_profile/2" in response.headers["Location"]
+
+
+def test_ban_user_post_invalid(logged_in_master_client):
+    response = logged_in_master_client.post("/ban_user/2")
+    assert response.status_code == 200

@@ -8,6 +8,7 @@ from .edit_profile import edit_profile_bp
 from .promote_user import promote_user_bp
 from .search_users import search_users_bp
 from .search_users_api import search_users_api_bp
+from .ban_user import ban_user_bp
 
 
 def register_blueprints(app):
@@ -22,6 +23,7 @@ def register_blueprints(app):
         promote_user_bp,
         search_users_bp,
         search_users_api_bp,
+        ban_user_bp,
     ]
 
     for bp in blueprints:
