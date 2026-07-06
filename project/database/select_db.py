@@ -40,8 +40,14 @@ class Select:
 
     # Return the user object of a given id
     @staticmethod
-    def select_user_with_id(user_id: int) -> User:
+    def select_user_with_id(user_id: int) -> User | None:
         found_user = User.query.filter(User.id == user_id).first()
+        if found_user is None:
+            return None
+
+        found_user.ban_end = datetime.fromtimestamp(
+            found_user.ban_end
+        ).strftime("%d/%m/%Y")
         return found_user
 
     # Select the next 10 user_ids and usernames with a given username start

@@ -41,6 +41,13 @@
                 <p class="mt-1 ms-2 mb-0">{{ current_user.status }}</p>
             </div>
 
+            {% if current_user.status == "BANNED" %}
+            <div class="d-flex flex-column row border py-2 mx-0 rounded mb-3" style="background-color: white;">
+                <p class="text-primary fw-bold ms-0 my-0">Ban End</p>
+                <p class="mt-1 ms-2 mb-0">{{ current_user.ban_end }}</p>
+            </div>
+            {% endif %}
+
             <div class="d-flex flex-column row border py-2 mx-0 rounded mb-3 pe-2" style="background-color: white;">
                 {{ form.gender.label(class="text-primary fw-bold ms-0 my-0") }}
                 {{ form.gender(class="form-control mt-1 ms-2 mb-0", style="width: auto;", value=current_user.gender) }}            

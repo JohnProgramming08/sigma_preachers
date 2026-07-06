@@ -40,6 +40,13 @@
                 <p class="mt-1 ms-2 mb-0">{{ user_details.status }}</p>
             </div>
 
+            {% if user_details.status == "BANNED" %}
+            <div class="d-flex flex-column row border py-2 mx-0 rounded mb-3" style="background-color: white;">
+                <p class="text-primary fw-bold ms-0 my-0">Ban End</p>
+                <p class="mt-1 ms-2 mb-0">{{ user_details.ban_end }}</p>
+            </div>
+            {% endif %}
+
             <div class="d-flex flex-column row border py-2 mx-0 rounded mb-3" style="background-color: white;">
                 <p class="text-primary fw-bold ms-0 my-0">Gender</p>
                 <p class="mt-1 ms-2 mb-0">{{ user_details.gender }}</p>
@@ -63,10 +70,14 @@
                 <p class="text-primary fw-bold ms-0 my-0">Bio</p>
                 <p class="mt-1 ms-2 mb-0 text-break">{{ user_details.bio }}</p>
             </div>
-            {% if current_user.username == "MASTER" and not own_profile %}
+            {% if current_user.username == "MASTER" and not own_profile and user_details.status != "BANNED" %}
             <div class="d-flex justify-content-center" style="width: 100%">
                 <a href="/promote_user/{{ user_details.id }}" class="btn btn-primary py-2 mt-3 px-5 mx-auto">Promote</a>
                 <a href="/ban_user/{{ user_details.id }}" class="btn btn-danger py-2 mt-3 px-5 mx-auto">Ban</a>
+            </div>
+            {% elif current_user.username == "MASTER" and not own_profile %}
+            <div class="d-flex justify-content-center" style="width: 100%">
+                <a href="/unban_user/{{ user_details.id }}" class="btn btn-primary py-2 mt-3 px-5 mx-auto">Unban</a>
             </div>
             {% endif %}
         </div>

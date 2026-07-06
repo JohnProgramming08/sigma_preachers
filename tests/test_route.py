@@ -300,3 +300,22 @@ def test_ban_user_post_valid(logged_in_master_client, duration):
 def test_ban_user_post_invalid(logged_in_master_client):
     response = logged_in_master_client.post("/ban_user/2")
     assert response.status_code == 200
+
+
+# Unban user route
+def test_unban_user_get_invalid1(many_hashed_users_client):
+    response = many_hashed_users_client.get("/unban_user/2")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_unban_user_get_invalid2(one_logged_in_client):
+    response = one_logged_in_client.get("/unban_user/2")
+    assert response.status_code == 302
+    assert "/home" in response.headers["Location"]
+
+
+def test_unban_user_get_valid(logged_in_master_client):
+    response = logged_in_master_client.get("/unban_user/2")
+    assert response.status_code == 302
+    assert "/view_profile/2" in response.headers["Location"]

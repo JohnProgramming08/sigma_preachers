@@ -8,7 +8,7 @@ ban_user_bp = Blueprint("ban_user", __name__)
 
 @ban_user_bp.route("/ban_user/<int:user_id>", methods=["GET", "POST"])
 @login_required
-def ban_user_user(user_id: int):
+def ban_user(user_id: int):
     # User is not a high enough status
     if current_user.status not in ["MASTER", "ADMIN"]:
         flash("You do not have access to that page.", "warning")
@@ -26,5 +26,19 @@ def ban_user_user(user_id: int):
     # User has submitted a valid form
     ban_duration = form.duration.data
     service.ban_user(ban_duration)
+
+    return redirect(url_for("view_profile.view_profile", id=user_id))
+
+
+@ban_user_bp.route("/unban_user/<int:user_id>")
+@login_required
+def unban_user(user_id: int):
+    # User is not a high enough status
+    if current_user.status not in ["MASTER", "ADMIN"]:
+        flash("You do not have access to that page.", "warning")
+        return redirect(url_for("home.home"))
+
+    service = BanService(user_id)
+    service.unban_user()
 
     return redirect(url_for("view_profile.view_profile", id=user_id))
