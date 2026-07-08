@@ -11,6 +11,7 @@ from project.services import (
     PromoteUserService,
     SearchUsersService,
     BanService,
+    SearchRoomsService,
 )
 from project.database import User
 
@@ -148,6 +149,21 @@ def test_fetch_accessible_rooms_mixed(one_room_access_app):
 
             service = HomeService(i)
             assert len(service.fetch_accessible_rooms()) == expected_length
+
+
+@pytest.mark.parametrize(
+    "room_name", ["sigma room", "tiny", "super long sick name", "51gm4"]
+)
+def test_create_room_valid(one_room_access_app, room_name):
+    service = HomeService(1)
+    with one_room_access_app.app_context():
+        assert service.create_room(room_name) == 3
+
+
+def test_create_room_invalid(one_room_access_app):
+    service = HomeService(1)
+    with one_room_access_app.app_context():
+        assert service.create_room("Global") == -1
 
 
 # WebsocketService
@@ -426,3 +442,33 @@ def test_get_user_details_invalid(many_hashed_users_app, user_id):
     service = BanService(user_id)
     with many_hashed_users_app.app_context():
         assert service.get_user_details() is None
+
+
+# SearchRoomsService
+@pytest.mark.parametrize(
+    "user_id, room_id",
+    [(1, 1), (1, 2), (1, 67676767), (2, 1), (2345678, 1), (80085, 80085)],
+)
+def test_add_room_access(one_user_room_app, user_id, room_id):
+    service = SearchRoomsService(user_id)
+    with one_user_room_app.app_context():
+        assert service.add_room_access(room_id) == 1
+
+
+@pytest.mark.parametrize(
+    "user_id, start, room_name, length",
+    [
+        (1, 0, "", 1),
+        (1, 0, "sig", 1),
+        (1, 0, "sigma central", 1),
+        (1, 1, "sig", 0),
+        (100, 0, "", 2),
+        (100, 2, "", 0),
+    ],
+)
+def test_fetch_next_10_rooms(
+    one_room_access_app, user_id, start, room_name, length
+):
+    service = SearchRoomsService(user_id)
+    with one_room_access_app.app_context():
+        assert len(service.fetch_next_10_rooms(start, room_name)) == length

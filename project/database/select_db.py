@@ -1,4 +1,4 @@
-from .create_db import User, RoomAccess, Room
+from .create_db import User, RoomAccess, Room, db
 from datetime import datetime
 
 
@@ -105,3 +105,44 @@ class Select:
             return True
 
         return False
+
+    # Select the next 10 rooms the user doesn't have access to
+    @staticmethod
+    def select_rooms_with_name(
+        start: int, user_id: int, room_name: str
+    ) -> list:
+        found_rooms = (
+            db.session.query(Room)
+            .outerjoin(
+                RoomAccess,
+                (Room.id == RoomAccess.room_id)
+                & (RoomAccess.user_id == user_id),
+            )
+            .filter(
+                RoomAccess.id.is_(None) & Room.room_name.startswith(room_name)
+            )  # user has NO access
+            .order_by(Room.id)
+            .offset(start)
+            .limit(10)
+            .all()
+        )
+
+        return [[room.id, room.room_name] for room in found_rooms]
+
+    @staticmethod
+    def select_10_rooms(start: int, user_id: int):
+        found_rooms = (
+            db.session.query(Room)
+            .outerjoin(
+                RoomAccess,
+                (Room.id == RoomAccess.room_id)
+                & (RoomAccess.user_id == user_id),
+            )
+            .filter(RoomAccess.id.is_(None))  # user has NO access
+            .order_by(Room.id)
+            .offset(start)
+            .limit(10)
+            .all()
+        )
+
+        return [[room.id, room.room_name] for room in found_rooms]

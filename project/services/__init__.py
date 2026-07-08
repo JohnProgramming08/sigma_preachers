@@ -10,3 +10,4 @@ from .master import MasterService
 from .promote_user import PromoteUserService
 from .search_users import SearchUsersService
 from .ban import BanService
+from .search_rooms import SearchRoomsService

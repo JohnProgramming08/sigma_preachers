@@ -88,6 +88,13 @@ def one_user_room_app(app):
     return app
 
 
+# Client with one user and one room
+@pytest.fixture
+def one_user_room_client(one_user_room_app):
+    res_client = one_user_room_app.test_client()
+    return res_client
+
+
 # App with one room access
 @pytest.fixture
 def one_room_access_app(one_user_room_app):

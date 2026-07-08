@@ -29,7 +29,7 @@ class Insert:
 
     # Allow a user to access a room, returning the room access id
     @staticmethod
-    def insert_room_access(user_id: int, room_id: int):
+    def insert_room_access(user_id: int, room_id: int) -> int:
         new_room_access = RoomAccess(user_id=user_id, room_id=room_id)
         db.session.add(new_room_access)
         db.session.commit()

@@ -109,6 +109,38 @@ def test_home_get_valid(one_logged_in_client):
     assert response.status_code == 200
 
 
+# Add room route
+@pytest.mark.parametrize(
+    "room_name", ["Sigam Valley", "short", "super fine yeah"]
+)
+def test_add_room_post_valid(logged_in_master_client, room_name):
+    data = {"room_name": room_name}
+    response = logged_in_master_client.post("/add_room", data=data)
+    assert response.status_code == 302
+    assert "/home" in response.headers["Location"]
+
+
+def test_add_room_post_invalid1(many_hashed_users_client):
+    data = {"room_name": "Valid"}
+    response = many_hashed_users_client.post("/add_room", data=data)
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_add_room_post_invalid2(one_logged_in_client):
+    data = {"room_name": "Valid"}
+    response = one_logged_in_client.post("/add_room", data=data)
+    assert response.status_code == 302
+    assert "/home" in response.headers["Location"]
+
+
+def test_add_room_post_invalid3(logged_in_master_client):
+    data = {"room_name": "nope"}
+    response = logged_in_master_client.post("/add_room", data=data)
+    assert response.status_code == 302
+    assert "/home" in response.headers["Location"]
+
+
 # Room page
 def test_room_get_invalid(many_hashed_users_client):
     response = many_hashed_users_client.get("/room/1", follow_redirects=False)
@@ -319,3 +351,65 @@ def test_unban_user_get_valid(logged_in_master_client):
     response = logged_in_master_client.get("/unban_user/2")
     assert response.status_code == 302
     assert "/view_profile/2" in response.headers["Location"]
+
+
+# Search rooms page
+def test_search_rooms_get_invalid(many_hashed_users_client):
+    response = many_hashed_users_client.get("/search_rooms")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_search_rooms_get_valid(one_logged_in_client):
+    response = one_logged_in_client.get("/search_rooms")
+    assert response.status_code == 200
+
+
+# Search rooms api
+@pytest.mark.parametrize(
+    "room_name, start",
+    [
+        ("sigma", 1),
+        ("sigma", 1987),
+        ("sigma central", 2),
+        ("not there", 0),
+    ],
+)
+def test_search_rooms_api_valid(one_logged_in_client, room_name, start):
+    response = one_logged_in_client.post(
+        f"/search_rooms_api/{room_name}/{start}"
+    )
+    assert response.status_code == 200
+
+
+def test_search_rooms_api_invalid(many_hashed_users_client):
+    response = many_hashed_users_client.post("/search_rooms_api/anything/0")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+# Search all rooms api
+@pytest.mark.parametrize("start", range(11))
+def test_search_all_rooms_api_valid(one_logged_in_client, start):
+    response = one_logged_in_client.post(f"/search_all_rooms_api/{start}")
+    assert response.status_code == 200
+
+
+def test_search_all_rooms_api_invalid(many_hashed_users_client):
+    response = many_hashed_users_client.post("/search_all_rooms_api/0")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+# Join room route
+@pytest.mark.parametrize("room_id", range(1, 11))
+def test_join_room_valid(one_logged_in_client, room_id):
+    response = one_logged_in_client.get(f"/join_room/{room_id}")
+    assert response.status_code == 302
+    assert "/room" in response.headers["Location"]
+
+
+def test_join_room_invalid(many_hashed_users_client):
+    response = many_hashed_users_client.get("/join_room/1")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]

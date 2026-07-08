@@ -168,3 +168,35 @@ def test_has_ban_ended_valid(one_banned_user_app, user_id, expected):
 def test_has_ban_ended_invalid(one_banned_user_app, user_id):
     with one_banned_user_app.app_context():
         assert Select.has_ban_ended(user_id) is False
+
+
+# Fetching the next 10 rooms a user can't access
+@pytest.mark.parametrize(
+    "start, user_id, room_name, expected",
+    [
+        (0, 1, "sigma", 1),
+        (0, 1, "sigma central", 1),
+        (0, 2, "Global", 1),
+        (1, 1, "nothing", 0),
+        (100, 1, "sigma", 0),
+        (0, 67, "sigma", 1),
+        (1, 1, "sigma", 0),
+    ],
+)
+def test_select_rooms_with_name(
+    one_room_access_app, start, user_id, room_name, expected
+):
+    with one_room_access_app.app_context():
+        assert (
+            len(Select.select_rooms_with_name(start, user_id, room_name))
+            == expected
+        )
+
+
+@pytest.mark.parametrize(
+    "start, user_id, expected",
+    [(0, 1, 1), (1, 1, 0), (0, 2, 2), (100, 2, 0), (1, 2, 1)],
+)
+def test_select_10_rooms(one_room_access_app, start, user_id, expected):
+    with one_room_access_app.app_context():
+        assert len(Select.select_10_rooms(start, user_id)) == expected

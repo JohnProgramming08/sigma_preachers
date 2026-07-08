@@ -42,5 +42,21 @@
             {% endfor %}
         </tbody>
     </table>
+    
+    <div class="d-flex justify-content-center my-5 row">
+        {% if current_user.status == "MASTER" or current_user.status == "ADMIN" %}
+        <button class="btn btn-primary col-sm-2" onclick="displayForm()" id="display-form-btn">Add room</button>
+
+        <form class="d-none rounded p-2 bg-light col-sm-6" method="post" action="/add_room">
+            {{ room_form.hidden_tag() }}
+            {{ room_form.room_name(class="form-control", placeholder="Room name") }}
+            <div class="d-flex justify-content-center">
+                {{ room_form.submit(class="btn btn-primary mt-3 px-5") }}
+            </div>
+        </form>
+        {% endif %}
+    </div>
 </main>
+
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
 {% endblock %}
