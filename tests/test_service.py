@@ -12,6 +12,7 @@ from project.services import (
     SearchUsersService,
     BanService,
     SearchRoomsService,
+    ContactUsService,
 )
 from project.database import User
 
@@ -470,3 +471,21 @@ def test_fetch_next_10_rooms(
     service = SearchRoomsService(user_id)
     with one_room_access_app.app_context():
         assert len(service.fetch_next_10_rooms(start, room_name)) == length
+
+
+# ContactUsService
+@pytest.mark.parametrize(
+    "title, content, user_id, type_id",
+    [
+        ("Valid", "Also valid", 1, 1),
+        ("tiny", "but pretty long but also valid", 67, 76),
+        ("bored", "no im not im coding", 123, 456),
+        ("this time the title is the long", "one.", 16, 64),
+    ],
+)
+def test_send_admin_message(
+    many_hashed_users_app, title, content, user_id, type_id
+):
+    service = ContactUsService(title, content, user_id, type_id)
+    with many_hashed_users_app.app_context():
+        assert service.send_admin_message() is True

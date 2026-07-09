@@ -413,3 +413,54 @@ def test_join_room_invalid(many_hashed_users_client):
     response = many_hashed_users_client.get("/join_room/1")
     assert response.status_code == 302
     assert "/login" in response.headers["Location"]
+
+
+# Contact us page
+def test_contact_us_get_invalid(many_hashed_users_client):
+    response = many_hashed_users_client.get("/contact_us")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_contact_us_get_valid(one_logged_in_client):
+    response = one_logged_in_client.get("/contact_us")
+    assert response.status_code == 200
+
+
+@pytest.mark.parametrize(
+    "message_type, title, message",
+    [
+        (1, "Valid", "A bit longer but also valid"),
+        (4, "Quite a long title", "killin it ong"),
+        (2, "six and a seven", "funny t1t13"),
+    ],
+)
+def test_contact_us_post_valid(
+    one_logged_in_client, message_type, title, message
+):
+    data = {
+        "message_type": message_type,
+        "title": title,
+        "message": message,
+    }
+    response = one_logged_in_client.post("/contact_us", data=data)
+    assert response.status_code == 302
+    assert "/home" in response.headers["Location"]
+
+
+@pytest.mark.parametrize(
+    "message_type, title, message",
+    [
+        (7, "Valid", "Valid"),
+        (1, "nope", "Valid"),
+        (1, "Valid", "Nope"),
+        (67, "nope", "Valid"),
+        (1, "nope", "nope"),
+    ],
+)
+def test_contact_us_post_invalid(
+    one_logged_in_client, message_type, title, message
+):
+    data = {"message_type": message_type, "title": title, "message": message}
+    response = one_logged_in_client.post("/contact_us", data=data)
+    assert response.status_code == 200
