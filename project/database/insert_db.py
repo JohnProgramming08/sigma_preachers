@@ -1,4 +1,11 @@
-from .create_db import User, Room, RoomAccess, db
+from .create_db import (
+    User,
+    Room,
+    RoomAccess,
+    AdminMessageType,
+    AdminMessage,
+    db,
+)
 
 
 class Insert:
@@ -35,3 +42,23 @@ class Insert:
         db.session.commit()
 
         return new_room_access.id
+
+    # Insert an admin message type, returning its id
+    def insert_admin_message_type(name: str) -> int:
+        new_admin_message_type = AdminMessageType(name=name)
+        db.session.add(new_admin_message_type)
+        db.session.commit()
+
+        return new_admin_message_type.id
+
+    # Insert an admin message, returning if successful
+    def insert_admin_message(
+        title: str, content: str, type_id: int, user_id: int
+    ) -> bool:
+        new_admin_message = AdminMessage(
+            title=title, content=content, type_id=type_id, user_id=user_id
+        )
+        db.session.add(new_admin_message)
+        db.session.commit()
+
+        return True

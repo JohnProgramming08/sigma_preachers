@@ -82,7 +82,7 @@ def test_insert_user_erroneous(app, username):
 )
 def test_insert_one_room_valid(app, room_name):
     with app.app_context():
-        assert Insert.insert_room(room_name) == 2
+        assert Insert.insert_room(room_name) == 1
 
 
 def test_insert_many_rooms_valid(app):
@@ -90,7 +90,7 @@ def test_insert_many_rooms_valid(app):
 
     with app.app_context():
         for i, room_name in enumerate(data):
-            assert Insert.insert_room(room_name) == i + 2
+            assert Insert.insert_room(room_name) == i + 1
 
 
 @pytest.mark.parametrize("room_name", ["Sigma room name", "dope", "6767"])
@@ -113,3 +113,57 @@ def test_insert_many_rooms_invalid(app):
 def test_insert_room_access(one_user_room_app):
     with one_user_room_app.app_context():
         assert Insert.insert_room_access(1, 1) == 1
+
+
+# Inserting an admin message type
+@pytest.mark.parametrize(
+    "name", ["Valid", "nothing wrong here", "c001 h4ck3r m4n"]
+)
+def test_insert_one_admin_message_type_valid(app, name):
+    with app.app_context():
+        Insert.insert_admin_message_type(name) == 1
+
+
+def test_insert_many_admin_message_types_valid(app):
+    data = ("Valid", "nothing wrong here", "c001 h4ck3r m4n")
+    with app.app_context():
+        for i, name in enumerate(data):
+            assert Insert.insert_admin_message_type(name) == i + 1
+
+
+def test_insert_admin_message_type_invalid(app):
+    with app.app_context(), pytest.raises(IntegrityError):
+        assert Insert.insert_admin_message_type("Valid") == 1
+        Insert.insert_admin_message_type("Valid")
+
+
+# Inserting and admin message
+@pytest.mark.parametrize(
+    "title, content, type_id, user_id",
+    [
+        ("Valid", "Valid but a little longer", 1, 1),
+        ("same", "same", 1, 1),
+        ("A very long title for a very short", "message", 2, 7),
+    ],
+)
+def test_insert_one_admin_message(app, title, content, type_id, user_id):
+    with app.app_context():
+        assert (
+            Insert.insert_admin_message(title, content, type_id, user_id)
+            is True
+        )
+
+
+def test_insert_many_admin_messages(app):
+    data = [
+        ("Valid", "Valid but a little longer", 1, 1),
+        ("same", "same", 1, 1),
+        ("A very long title for a very short", "message", 2, 7),
+    ]
+
+    with app.app_context():
+        for row in data:
+            assert (
+                Insert.insert_admin_message(row[0], row[1], row[2], row[3])
+                is True
+            )

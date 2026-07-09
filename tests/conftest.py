@@ -1,7 +1,7 @@
 import pytest
 from project import create_app
 from project.database import Insert, Update
-from project.services import HashService, MasterService
+from project.services import HashService, PopulateService
 
 
 @pytest.fixture
@@ -54,6 +54,8 @@ def many_hashed_users_app(app):
             username = pair[0]
             password_hash = HashService.hash(pair[1])
             Insert.insert_user(username, password_hash)
+
+        Insert.insert_room("Global")
 
     return app
 
@@ -123,7 +125,7 @@ def socketio_client(app):
 # Logged in master client, where master id is 4
 @pytest.fixture
 def logged_in_master_client(many_hashed_users_app):
-    service = MasterService()
+    service = PopulateService()
     with many_hashed_users_app.app_context():
         service.add_master()
 
@@ -142,3 +144,12 @@ def one_banned_user_app(many_hashed_users_app):
         Update.ban_user(1, 6767)
 
     return many_hashed_users_app
+
+
+# App with one admin message type
+@pytest.fixture
+def one_admin_message_type_app(app):
+    with app.app_context():
+        Insert.insert_admin_message_type("Other")
+
+    return app

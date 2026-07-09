@@ -1,4 +1,4 @@
-from .create_db import User, RoomAccess, Room, db
+from .create_db import User, RoomAccess, Room, AdminMessageType, db
 from datetime import datetime
 
 
@@ -146,3 +146,16 @@ class Select:
         )
 
         return [[room.id, room.room_name] for room in found_rooms]
+
+    # Return whether or not a room with the given name exists
+    @staticmethod
+    def room_name_exists(room_name: str) -> bool:
+        found_room = Room.query.filter(Room.room_name == room_name).first()
+        return found_room != None
+
+    # Return whether or not the given admin message type exists
+    def admin_message_type_exists(name: str) -> bool:
+        found_type = AdminMessageType.query.filter(
+            AdminMessageType.name == name
+        ).first()
+        return found_type != None

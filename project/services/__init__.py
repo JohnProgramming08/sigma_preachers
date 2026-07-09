@@ -6,7 +6,7 @@ from .websocket import WebsocketService
 from .room import RoomService
 from .view_profile import ViewProfileService
 from .edit_profile import EditProfileService
-from .master import MasterService
+from .populate import PopulateService
 from .promote_user import PromoteUserService
 from .search_users import SearchUsersService
 from .ban import BanService

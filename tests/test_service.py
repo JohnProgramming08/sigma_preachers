@@ -7,7 +7,7 @@ from project.services import (
     RoomService,
     ViewProfileService,
     EditProfileService,
-    MasterService,
+    PopulateService,
     PromoteUserService,
     SearchUsersService,
     BanService,
@@ -157,13 +157,13 @@ def test_fetch_accessible_rooms_mixed(one_room_access_app):
 def test_create_room_valid(one_room_access_app, room_name):
     service = HomeService(1)
     with one_room_access_app.app_context():
-        assert service.create_room(room_name) == 3
+        assert service.create_room(room_name) == 2
 
 
 def test_create_room_invalid(one_room_access_app):
     service = HomeService(1)
     with one_room_access_app.app_context():
-        assert service.create_room("Global") == -1
+        assert service.create_room("sigma central") == -1
 
 
 # WebsocketService
@@ -195,11 +195,9 @@ def test_leave(socketio_client):
 # RoomService
 def test_get_room_valid(one_room_access_app):
     service1 = RoomService(1)
-    service2 = RoomService(2)
 
     with one_room_access_app.app_context():
         assert service1.get_room() is not None
-        assert service2.get_room() is not None
 
 
 @pytest.mark.parametrize("room_id", range(3, 10))
@@ -213,7 +211,7 @@ def test_get_room_mixed(one_room_access_app):
     with one_room_access_app.app_context():
         for room_id in range(10):
             service = RoomService(room_id)
-            if room_id in [1, 2]:
+            if room_id == 1:
                 assert service.get_room() is not None
             else:
                 assert service.get_room() is None
@@ -268,15 +266,15 @@ def test_update_profile_invalid(many_hashed_users_app):
         assert service2.update_profile() is False
 
 
-# MasterService
+# PopulateService
 def test_add_master_valid(many_hashed_users_app):
-    service = MasterService()
+    service = PopulateService()
     with many_hashed_users_app.app_context():
         assert service.add_master() is True
 
 
 def test_add_master_mixed(many_hashed_users_app):
-    service = MasterService()
+    service = PopulateService()
     with many_hashed_users_app.app_context():
         assert service.add_master() is True
         assert service.add_master() is False
@@ -458,11 +456,11 @@ def test_add_room_access(one_user_room_app, user_id, room_id):
 @pytest.mark.parametrize(
     "user_id, start, room_name, length",
     [
-        (1, 0, "", 1),
-        (1, 0, "sig", 1),
-        (1, 0, "sigma central", 1),
+        (1, 0, "", 0),
+        (2, 0, "sig", 1),
+        (2, 0, "sigma central", 1),
         (1, 1, "sig", 0),
-        (100, 0, "", 2),
+        (100, 0, "", 1),
         (100, 2, "", 0),
     ],
 )

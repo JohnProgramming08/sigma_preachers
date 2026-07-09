@@ -75,7 +75,6 @@ def test_select_accessible_rooms_mixed(one_room_access_app):
 def test_select_room_valid(one_room_access_app):
     with one_room_access_app.app_context():
         assert Select.select_room(1) is not None
-        assert Select.select_room(2) is not None
 
 
 @pytest.mark.parametrize("room_id", range(3, 10))
@@ -87,7 +86,7 @@ def test_select_room_invalid(one_room_access_app, room_id):
 def test_select_room_mixed(one_room_access_app):
     with one_room_access_app.app_context():
         for room_id in range(10):
-            if room_id in [1, 2]:
+            if room_id == 1:
                 assert Select.select_room(room_id) is not None
             else:
                 assert Select.select_room(room_id) is None
@@ -174,9 +173,9 @@ def test_has_ban_ended_invalid(one_banned_user_app, user_id):
 @pytest.mark.parametrize(
     "start, user_id, room_name, expected",
     [
-        (0, 1, "sigma", 1),
-        (0, 1, "sigma central", 1),
-        (0, 2, "Global", 1),
+        (0, 2, "sigma", 1),
+        (0, 2, "sigma central", 1),
+        (0, 2, "Global", 0),
         (1, 1, "nothing", 0),
         (100, 1, "sigma", 0),
         (0, 67, "sigma", 1),
@@ -195,8 +194,33 @@ def test_select_rooms_with_name(
 
 @pytest.mark.parametrize(
     "start, user_id, expected",
-    [(0, 1, 1), (1, 1, 0), (0, 2, 2), (100, 2, 0), (1, 2, 1)],
+    [(0, 1, 0), (1, 1, 0), (0, 2, 1), (100, 2, 0), (1, 2, 0)],
 )
 def test_select_10_rooms(one_room_access_app, start, user_id, expected):
     with one_room_access_app.app_context():
         assert len(Select.select_10_rooms(start, user_id)) == expected
+
+
+# Checking if a given room name exists
+@pytest.mark.parametrize(
+    "room_name, exists",
+    [
+        ("sigma central", True),
+        ("super awesome", False),
+        ("sigma", False),
+        ("like anything else", False),
+    ],
+)
+def test_room_name_exists(one_room_access_app, room_name, exists):
+    with one_room_access_app.app_context():
+        assert Select.room_name_exists(room_name) == exists
+
+
+# Checking if a given admin message type exists
+@pytest.mark.parametrize(
+    "name, exists",
+    [("Other", True), ("other", False), ("Ot", False), ("sigma valley", False)],
+)
+def test_admin_message_type_exists(one_admin_message_type_app, name, exists):
+    with one_admin_message_type_app.app_context():
+        assert Select.admin_message_type_exists(name) == exists
