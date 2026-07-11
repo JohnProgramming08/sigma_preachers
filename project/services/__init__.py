@@ -12,3 +12,4 @@ from .search_users import SearchUsersService
 from .ban import BanService
 from .search_rooms import SearchRoomsService
 from .contact_us import ContactUsService
+from .admin_messages import AdminMessagesService

@@ -153,3 +153,30 @@ def one_admin_message_type_app(app):
         Insert.insert_admin_message_type("Other")
 
     return app
+
+
+# App with 3 admin messages
+@pytest.fixture
+def many_admin_messages_app(one_admin_message_type_app):
+    data = [
+        ("super sigma", "also super sigma", 1, 1),
+        ("pretty cool", "sigma", 2, 1),
+        ("six and", "seven", 6, 7),
+    ]
+    with one_admin_message_type_app.app_context():
+        for row in data:
+            Insert.insert_admin_message(row[0], row[1], row[2], row[3])
+
+    return one_admin_message_type_app
+
+
+# Client with logged in master and 3 admin messages
+@pytest.fixture
+def logged_in_master_messages_client(many_admin_messages_app):
+    with many_admin_messages_app.app_context():
+        PopulateService.add_master()
+
+    res_client = many_admin_messages_app.test_client()
+    res_client.post("/login", data={"username": "MASTER", "password": "MASTER"})
+
+    return res_client

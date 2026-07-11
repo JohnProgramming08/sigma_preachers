@@ -11,6 +11,7 @@ from .search_users_api import search_users_api_bp
 from .ban_user import ban_user_bp
 from .search_rooms import search_rooms_bp
 from .contact_us import contact_us_bp
+from .admin_messages import admin_messages_bp
 
 
 def register_blueprints(app):
@@ -28,6 +29,7 @@ def register_blueprints(app):
         ban_user_bp,
         search_rooms_bp,
         contact_us_bp,
+        admin_messages_bp,
     ]
 
     for bp in blueprints:

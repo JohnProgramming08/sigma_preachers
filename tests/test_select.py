@@ -224,3 +224,27 @@ def test_room_name_exists(one_room_access_app, room_name, exists):
 def test_admin_message_type_exists(one_admin_message_type_app, name, exists):
     with one_admin_message_type_app.app_context():
         assert Select.admin_message_type_exists(name) == exists
+
+
+# Fetching all non dismissed admin messages
+def test_select_all_admin_messages1(many_admin_messages_app):
+    with many_admin_messages_app.app_context():
+        assert len(Select.select_all_admin_messages()) == 3
+
+
+def test_select_all_admin_messages2(app):
+    with app.app_context():
+        assert len(Select.select_all_admin_messages()) == 0
+
+
+# Fetching the data of a given admin message
+@pytest.mark.parametrize("message_id", range(1, 4))
+def test_select_admin_message_valid(many_admin_messages_app, message_id):
+    with many_admin_messages_app.app_context():
+        assert Select.select_admin_message(message_id) is not None
+
+
+@pytest.mark.parametrize("message_id", range(4, 11))
+def test_select_admin_message_invalid(many_admin_messages_app, message_id):
+    with many_admin_messages_app.app_context():
+        assert Select.select_admin_message(message_id) is None

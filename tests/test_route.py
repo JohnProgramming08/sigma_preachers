@@ -464,3 +464,65 @@ def test_contact_us_post_invalid(
     data = {"message_type": message_type, "title": title, "message": message}
     response = one_logged_in_client.post("/contact_us", data=data)
     assert response.status_code == 200
+
+
+# Admin messages page
+def test_admin_messages_get_invalid1(many_hashed_users_client):
+    response = many_hashed_users_client.get("/admin_messages")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_admin_messages_get_invalid2(one_logged_in_client):
+    response = one_logged_in_client.get("/admin_messages")
+    assert response.status_code == 302
+    assert "/home" in response.headers["Location"]
+
+
+def test_admin_messages_get_valid(logged_in_master_client):
+    response = logged_in_master_client.get("/admin_messages")
+    assert response.status_code == 200
+
+
+# Retrieve admin messages api
+def test_admin_messages_api_retrieve_get_invalid1(many_hashed_users_client):
+    response = many_hashed_users_client.get("/admin_messages_api/retrieve/1")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_admin_messages_api_retrieve_get_invalid2(one_logged_in_client):
+    response = one_logged_in_client.get("/admin_messages_api/retrieve/1")
+    assert response.status_code == 200
+
+
+@pytest.mark.parametrize("message_id", range(1, 4))
+def test_admin_messages_api_retrieve_get_valid(
+    logged_in_master_messages_client, message_id
+):
+    response = logged_in_master_messages_client.get(
+        f"/admin_messages_api/retrieve/{message_id}"
+    )
+    assert response.status_code == 200
+
+
+def test_admin_messages_dismiss_get_invalid1(many_hashed_users_client):
+    response = many_hashed_users_client.get("/admin_messages/dismiss/1")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_admin_messages_dismiss_get_invalid2(one_logged_in_client):
+    response = one_logged_in_client.get("/admin_messages/dismiss/1")
+    assert response.status_code == 302
+    assert "/home" in response.headers["Location"]
+
+
+@pytest.mark.parametrize("message_id", range(1, 11))
+def test_admin_messages_dismiss_get_valid(
+    logged_in_master_messages_client, message_id
+):
+    response = logged_in_master_messages_client.get(
+        f"/admin_messages/dismiss/{message_id}"
+    )
+    assert response.status_code == 200

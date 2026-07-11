@@ -1,4 +1,11 @@
-from .create_db import User, RoomAccess, Room, AdminMessageType, db
+from .create_db import (
+    User,
+    RoomAccess,
+    Room,
+    AdminMessageType,
+    AdminMessage,
+    db,
+)
 from datetime import datetime
 
 
@@ -159,3 +166,64 @@ class Select:
             AdminMessageType.name == name
         ).first()
         return found_type != None
+
+    # Select all admin messages that haven't been dismissed
+    @staticmethod
+    def select_all_admin_messages() -> list:
+        found_messages = AdminMessage.query.filter(
+            AdminMessage.dismissed == False
+        ).all()
+
+        res = []
+        for message in found_messages:
+            # User may have deleted their account
+            if message.user is None:
+                username = "Anonymous"
+            else:
+                username = message.user.username
+
+            # Message type may no longer exist
+            if message.message_type is None:
+                message_type = "Unknown"
+            else:
+                message_type = message.message_type.name
+
+            res.append(
+                {
+                    "message_type": message_type,
+                    "title": message.title,
+                    "username": username,
+                }
+            )
+
+        return res
+
+    # Fetch the data of the admin message with the given id
+    def select_admin_message(message_id: int) -> dict | None:
+        message = AdminMessage.query.filter(
+            AdminMessage.id == message_id
+        ).first()
+        if message is None:
+            return None
+
+        # User may have deleted their account
+        if message.user is None:
+            username = "Anonymous"
+        else:
+            username = message.user.username
+
+        # Message type may no longer exist
+        if message.message_type is None:
+            message_type = "Unknown"
+        else:
+            message_type = message.message_type.name
+
+        data = {
+            "message_type": message_type,
+            "title": message.title,
+            "username": username,
+            "content": message.content,
+            "id": message.id,
+        }
+
+        return data

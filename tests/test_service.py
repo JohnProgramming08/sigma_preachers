@@ -13,6 +13,7 @@ from project.services import (
     BanService,
     SearchRoomsService,
     ContactUsService,
+    AdminMessagesService,
 )
 from project.database import User
 
@@ -489,3 +490,44 @@ def test_send_admin_message(
     service = ContactUsService(title, content, user_id, type_id)
     with many_hashed_users_app.app_context():
         assert service.send_admin_message() is True
+
+
+# AdminMessagesService
+def test_fetch_all_messages1(many_admin_messages_app):
+    with many_admin_messages_app.app_context():
+        assert len(AdminMessagesService.fetch_all_messages()) == 3
+
+
+def test_fetch_all_messages2(app):
+    with app.app_context():
+        assert len(AdminMessagesService.fetch_all_messages()) == 0
+
+
+@pytest.mark.parametrize("message_id", range(1, 4))
+def test_dismiss_one_message_valid(many_admin_messages_app, message_id):
+    with many_admin_messages_app.app_context():
+        assert AdminMessagesService.dismiss_message(message_id) is True
+
+
+def test_dismiss_many_messages_valid(many_admin_messages_app):
+    with many_admin_messages_app.app_context():
+        for id in range(1, 4):
+            assert AdminMessagesService.dismiss_message(id) is True
+
+
+@pytest.mark.parametrize("message_id", range(4, 11))
+def test_dismiss_message_invalid(many_admin_messages_app, message_id):
+    with many_admin_messages_app.app_context():
+        assert AdminMessagesService.dismiss_message(message_id) is False
+
+
+@pytest.mark.parametrize("message_id", range(1, 4))
+def test_fetch_message_data_valid(many_admin_messages_app, message_id):
+    with many_admin_messages_app.app_context():
+        assert AdminMessagesService.fetch_message_data(message_id) is not None
+
+
+@pytest.mark.parametrize("message_id", range(4, 11))
+def test_fetch_message_data_invalid(many_admin_messages_app, message_id):
+    with many_admin_messages_app.app_context():
+        assert AdminMessagesService.fetch_message_data(message_id) is None

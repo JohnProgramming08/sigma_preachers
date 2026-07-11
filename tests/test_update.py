@@ -95,3 +95,22 @@ def test_unban_user_valid(many_hashed_users_app, user_id):
 def test_unban_user_invalid(many_hashed_users_app, user_id):
     with many_hashed_users_app.app_context():
         assert Update.unban_user(user_id) is False
+
+
+# Marking a message as dismissed
+@pytest.mark.parametrize("message_id", range(1, 4))
+def test_dismiss_one_admin_message_valid(many_admin_messages_app, message_id):
+    with many_admin_messages_app.app_context():
+        assert Update.dismiss_admin_message(message_id) is True
+
+
+def test_dismiss_many_admin_messages_valid(many_admin_messages_app):
+    with many_admin_messages_app.app_context():
+        for id in range(1, 4):
+            assert Update.dismiss_admin_message(id) is True
+
+
+@pytest.mark.parametrize("message_id", range(4, 11))
+def test_dismiss_admin_message_invlaid(many_admin_messages_app, message_id):
+    with many_admin_messages_app.app_context():
+        assert Update.dismiss_admin_message(message_id) is False

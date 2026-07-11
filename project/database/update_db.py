@@ -1,4 +1,4 @@
-from .create_db import User, db
+from .create_db import User, AdminMessage, db
 from datetime import datetime
 
 
@@ -60,6 +60,21 @@ class Update:
         user.status = "STANDARD USER"
         user.banned = False
         user.ban_end = 0
+        db.session.commit()
+
+        return True
+
+    # Update an admin message to be marked as dismissed
+    # Return if it was a success
+    @staticmethod
+    def dismiss_admin_message(message_id: int) -> bool:
+        found_message = AdminMessage.query.filter(
+            AdminMessage.id == message_id
+        ).first()
+        if found_message is None:
+            return False
+
+        found_message.dismissed = True
         db.session.commit()
 
         return True
