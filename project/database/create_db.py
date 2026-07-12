@@ -60,7 +60,7 @@ class AdminMessage(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(25), nullable=False)
-    content = db.Column(db.String(255), nullable=False)
+    content = db.Column(db.String(1670), nullable=False)
     dismissed = db.Column(db.Boolean, default=False, nullable=False)
 
     type_id = db.Column(

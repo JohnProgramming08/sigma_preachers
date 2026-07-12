@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block body %}
+<!-- Header -->
+<header class="row border-bottom border-2">
+    <nav class="navbar navbar-expand-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Sigma Preachers</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/view_profile/{{ current_user.id }}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search_users">Search users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search_rooms">Search rooms</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact_us">Contact us</a>
+                    </li>
+                    {% if current_user.status == "ADMIN" or current_user.status == "MASTER" %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/admin_messages">Admin messages</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Main -->
+<main class="row mt-5">
+    <div class="col-sm-4">
+        <table class="col-sm-4 table table-hover">
+            <tbody>
+                {% for message in messages %}
+                <tr onclick="getMessageData({{ message['id'] }})" style="cursor: pointer;">
+                    <td class="d-flex flex-column">
+                        <p class="text-primary mb-1"><b>{{ message["title"] }}</b></p>
+                        <p class="ms-1 mb-1">Username: {{ message["username"] }}</p>
+                        <p class="ms-1 mb-0">Message Type: {{ message["message_type"] }}</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-sm-8">
+        <div class="bg-light rounded border p-2 shadow">
+            <h4 id="message-title" class="mb-2 text-primary d-inline"></h4>
+            <span class="badge bg-info ms-3"><h6 id="message-type" class="mb-0"></h6></span>
+            <h5 id="message-username"></h5>
+            <div class="border border-1 mb-1"></div>
+            <p id="message-content" class="p-2"></p>
+            <a class="btn btn-danger px-4 d-none" href="#" id="dismiss-btn">Dismiss</a>
+        </div>
+    </div>
+</main>
+
+<script src="{{ url_for('static', filename='js/admin_messages.js') }}"></script>
+{% endblock %}

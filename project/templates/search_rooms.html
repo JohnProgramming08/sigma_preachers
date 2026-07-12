@@ -26,6 +26,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/contact_us">Contact us</a>
                     </li>
+                    {% if current_user.status == "ADMIN" or current_user.status == "MASTER" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin_messages">Admin messages</a>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

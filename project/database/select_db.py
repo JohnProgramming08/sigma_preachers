@@ -193,6 +193,7 @@ class Select:
                     "message_type": message_type,
                     "title": message.title,
                     "username": username,
+                    "id": message.id,
                 }
             )
 

@@ -25,6 +25,6 @@ class ContactUsForm(FlaskForm):
         "Title", validators=[DataRequired(), Length(min=5, max=25)]
     )
     message = TextAreaField(
-        "Message", validators=[DataRequired(), Length(min=5, max=255)]
+        "Message", validators=[DataRequired(), Length(min=5, max=1670)]
     )
     submit = SubmitField("Send")
