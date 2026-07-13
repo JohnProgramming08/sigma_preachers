@@ -248,3 +248,18 @@ def test_select_admin_message_valid(many_admin_messages_app, message_id):
 def test_select_admin_message_invalid(many_admin_messages_app, message_id):
     with many_admin_messages_app.app_context():
         assert Select.select_admin_message(message_id) is None
+
+
+# Fetching the next 10 messages in a given room
+@pytest.mark.parametrize(
+    "room_id, pointer, length",
+    [(1, 0, 2), (2, 0, 1), (67, 0, 0), (1, 67, 0), (1, 11, 1), (2, 11, 0)],
+)
+def test_select_10_room_messages(
+    many_room_messages_app, room_id, pointer, length
+):
+    with many_room_messages_app.app_context():
+        messages = Select.select_10_room_messages(room_id, pointer)[
+            "message_list"
+        ]
+        assert len(messages) == length

@@ -219,6 +219,47 @@ def test_get_room_mixed(one_room_access_app):
                 assert service.get_room() is None
 
 
+@pytest.mark.parametrize(
+    "content, room_id, user_id",
+    [
+        ("Valid", 1, 1),
+        ("Valid2", 67, 420),
+        ("This is a long one", 6, 7),
+        ("80085", 1, 2),
+    ],
+)
+def test_save_one_message(app, content, room_id, user_id):
+    service = RoomService(room_id)
+    with app.app_context():
+        assert service.save_message(content, user_id) is True
+
+
+def test_save_many_messages(app):
+    data = [
+        ("Valid", 1, 1),
+        ("Valid2", 67, 420),
+        ("This is a long one", 6, 7),
+        ("80085", 1, 2),
+    ]
+
+    for row in data:
+        service = RoomService(row[1])
+        with app.app_context():
+            assert service.save_message(row[0], row[2]) is True
+
+
+# Fetching the next 10 messages in a given room
+@pytest.mark.parametrize(
+    "room_id, pointer, length",
+    [(1, 0, 2), (2, 0, 1), (67, 0, 0), (1, 67, 0), (1, 11, 1), (2, 11, 0)],
+)
+def test_fetch_10_messages(many_room_messages_app, room_id, pointer, length):
+    service = RoomService(room_id)
+    with many_room_messages_app.app_context():
+        messages = service.fetch_10_messages(pointer)["message_list"]
+        assert len(messages) == length
+
+
 # ViewProfileService
 @pytest.mark.parametrize("user_id", range(1, 4))
 def test_get_user_object_valid(many_hashed_users_app, user_id):

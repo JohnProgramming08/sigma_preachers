@@ -180,3 +180,17 @@ def logged_in_master_messages_client(many_admin_messages_app):
     res_client.post("/login", data={"username": "MASTER", "password": "MASTER"})
 
     return res_client
+
+
+@pytest.fixture
+def many_room_messages_app(many_hashed_users_app):
+    data = [
+        ("A super sigma message", 1, 1),
+        ("A less sigma message", 1, 1),
+        ("Still pretty sigma", 2, 3),
+    ]
+    with many_hashed_users_app.app_context():
+        for row in data:
+            Insert.insert_room_message(row[0], row[1], row[2])
+
+    return many_hashed_users_app

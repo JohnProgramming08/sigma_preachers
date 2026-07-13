@@ -4,6 +4,7 @@ from .create_db import (
     RoomAccess,
     AdminMessageType,
     AdminMessage,
+    RoomMessage,
     db,
 )
 
@@ -59,6 +60,16 @@ class Insert:
             title=title, content=content, type_id=type_id, user_id=user_id
         )
         db.session.add(new_admin_message)
+        db.session.commit()
+
+        return True
+
+    # Insert a new room message, returning if successful
+    def insert_room_message(content: str, room_id: int, user_id: int) -> bool:
+        new_message = RoomMessage(
+            content=content, user_id=user_id, room_id=room_id
+        )
+        db.session.add(new_message)
         db.session.commit()
 
         return True

@@ -153,6 +153,48 @@ def test_room_get_valid(one_logged_in_client):
     assert response.status_code == 200
 
 
+# Room api update
+def test_room_api_upate_post_invalid(many_hashed_users_client):
+    response = many_hashed_users_client.post("/room_api/update/1")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+@pytest.mark.parametrize(
+    "content, room_id",
+    [
+        ("Valid", 1),
+        ("Valid2", 67),
+        ("This is a long one", 6),
+        ("80085", 1),
+    ],
+)
+def test_room_api_update_post_valid(one_logged_in_client, content, room_id):
+    data = {"message": content}
+
+    response = one_logged_in_client.post(
+        f"/room_api/update/{room_id}", json=data
+    )
+    assert response.status_code == 200
+
+
+# Room api retrieve
+def test_room_api_retrieve_post_invalid(many_hashed_users_client):
+    response = many_hashed_users_client.post("/room_api/retrieve/1/1")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+@pytest.mark.parametrize(
+    "room_id, pointer", [(1, 1), (67, 1), (8008, 12), (42, 53)]
+)
+def test_room_api_retrieve_post_valid(one_logged_in_client, room_id, pointer):
+    response = one_logged_in_client.post(
+        f"/room_api/retrieve/{room_id}/{pointer}"
+    )
+    assert response.status_code == 200
+
+
 # View profile page
 def test_view_profile_get_invalid(many_hashed_users_client):
     response = many_hashed_users_client.get(

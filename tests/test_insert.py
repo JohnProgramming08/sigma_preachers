@@ -167,3 +167,31 @@ def test_insert_many_admin_messages(app):
                 Insert.insert_admin_message(row[0], row[1], row[2], row[3])
                 is True
             )
+
+
+# Inserting a new room message
+@pytest.mark.parametrize(
+    "content, room_id, user_id",
+    [
+        ("Valid", 1, 1),
+        ("Valid2", 67, 420),
+        ("This is a long one", 6, 7),
+        ("80085", 1, 2),
+    ],
+)
+def test_insert_one_room_message(app, content, room_id, user_id):
+    with app.app_context():
+        assert Insert.insert_room_message(content, room_id, user_id) is True
+
+
+def test_insert_many_room_messages(app):
+    data = [
+        ("Valid", 1, 1),
+        ("Valid2", 67, 420),
+        ("This is a long one", 6, 7),
+        ("80085", 1, 2),
+    ]
+
+    with app.app_context():
+        for row in data:
+            assert Insert.insert_room_message(row[0], row[1], row[2]) is True

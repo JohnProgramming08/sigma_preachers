@@ -41,7 +41,7 @@
 <main>
     <div id="messages" class="row d-flex flex-column" style="margin-bottom: 20vh;"></div>
     <form class="fixed-bottom container d-flex flex-row p-3" style="background-color: white;" onsubmit="return false">
-        <input id="msg" type="text" placeholder="Enter your message" class="form-control rounded-end-0">
+        <input id="msg" type="text" placeholder="Enter your message" class="form-control rounded-end-0" maxlength="255">
         <button onclick="sendMessage()" class="btn btn-success rounded-start-0">Send</button>
     </form>
 </main>

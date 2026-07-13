@@ -26,6 +26,7 @@ class User(UserMixin, db.Model):
 
     room_access = db.relationship("RoomAccess", backref="user")
     admin_messages = db.relationship("AdminMessage", backref="user")
+    room_message = db.relationship("RoomMessage", backref="user")
 
 
 class Room(db.Model):
@@ -35,6 +36,7 @@ class Room(db.Model):
     room_name = db.Column(db.String(67), unique=True, nullable=False)
 
     room_access = db.relationship("RoomAccess", backref="room")
+    room_message = db.relationship("RoomMessage", backref="room")
 
 
 class RoomAccess(db.Model):
@@ -67,3 +69,13 @@ class AdminMessage(db.Model):
         db.Integer, db.ForeignKey("admin_message_types.id"), nullable=False
     )
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+
+class RoomMessage(db.Model):
+    __tablename__ = "room_messages"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    content = db.Column(db.String(255), nullable=False)
+
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    room_id = db.Column(db.Integer, db.ForeignKey("rooms.id"), nullable=False)
