@@ -39,6 +39,9 @@
 
 <!-- Main -->
 <main>
+    <div class="d-flex justify-content-center mb-3">
+        <button class="btn btn-primary px-3" onclick="getMessages()" id="more-btn">Load messages</button>
+    </div>
     <div id="messages" class="row d-flex flex-column" style="margin-bottom: 20vh;"></div>
     <form class="fixed-bottom container d-flex flex-row p-3" style="background-color: white;" onsubmit="return false">
         <input id="msg" type="text" placeholder="Enter your message" class="form-control rounded-end-0" maxlength="255">
@@ -49,6 +52,7 @@
 <script>
     window.username = {{ current_user.username | tojson}};
     window.room_name = {{ room_name  | tojson}};
+    window.room_id = {{ room_id | tojson }};
 </script>
 <script src="{{ url_for('static', filename='js/room.js') }}"></script>
 {% endblock %}

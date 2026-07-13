@@ -232,20 +232,9 @@ class Select:
 
     # Fetch the next 10 messages in a given room
     def select_10_room_messages(room_id: int, pointer: int = 0) -> dict:
-        if pointer == 0:
-            pointer = (
-                RoomMessage.query.filter(RoomMessage.room_id == room_id).count()
-                - 10
-            )
-        else:
-            pointer -= 10
-
-        if pointer < 0:
-            pointer = 0
-
         found_messages = (
             RoomMessage.query.filter(RoomMessage.room_id == room_id)
-            .order_by(RoomMessage.id)
+            .order_by(RoomMessage.id.desc())
             .offset(pointer)
             .limit(10)
             .all()

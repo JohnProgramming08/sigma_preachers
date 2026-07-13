@@ -251,7 +251,7 @@ def test_save_many_messages(app):
 # Fetching the next 10 messages in a given room
 @pytest.mark.parametrize(
     "room_id, pointer, length",
-    [(1, 0, 2), (2, 0, 1), (67, 0, 0), (1, 67, 0), (1, 11, 1), (2, 11, 0)],
+    [(1, 0, 2), (2, 0, 1), (67, 0, 0), (1, 67, 0), (1, 11, 0), (2, 11, 0)],
 )
 def test_fetch_10_messages(many_room_messages_app, room_id, pointer, length):
     service = RoomService(room_id)
