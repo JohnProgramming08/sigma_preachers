@@ -18,7 +18,7 @@
         <table class="col-sm-4 table table-hover">
             <tbody>
                 {% for message in messages %}
-                <tr onclick="getMessageData({{ message['id'] }})" style="cursor: pointer;" class="{{ message['message_type'] }} admin-message">
+                <tr onclick="getMessageData({{ message['id'] }})" style="cursor: pointer;" class="{{ message['message_type'] }} admin-message" id="{{ message['id'] }}">
                     <td class="d-flex flex-column">
                         <p class="text-primary mb-1"><b>{{ message["title"] }}</b></p>
                         <p class="ms-1 mb-1">Username: {{ message["username"] }}</p>

@@ -22,6 +22,14 @@ function displayMessage(data) {
     contentDisplay.innerHTML = data.content;
     dismissButton.classList.remove("d-none");
     dismissButton.href = `/admin_messages/dismiss/${data.id}`;
+    
+    for (const message of messages) {
+        if (message.id == data.id) {
+            message.classList.add("border", "border-primary", "border-3");
+        } else {
+            message.classList.remove("border", "border-primary", "border-3");
+        }
+    }
 }
 
 function filter() {
