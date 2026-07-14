@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block body %}
+<!-- Header -->
+<header class="row border-bottom border-2">
+    <nav class="navbar navbar-expand-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Sigma Preachers</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home" id="home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/view_profile/{{ current_user.id }}" id="profile">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search_users" id="search-users">Search users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search_rooms" id="search-rooms">Search rooms</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact_us" id="contact-us">Contact us</a>
+                    </li>
+                    {% if current_user.status == "ADMIN" or current_user.status == "MASTER" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin_messages" id="admin-messages">Admin messages</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+{% block main %}{% endblock %}
+
+<script src="{{ url_for('static', filename='js/base_header.js') }}"></script>
+{% endblock %}

@@ -1,42 +1,6 @@
-{% extends "base.html" %}
+{% extends "base_header.html" %}
 
-{% block body %}
-<!-- Header -->
-<header class="row border-bottom border-2">
-    <nav class="navbar navbar-expand-sm">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">Sigma Preachers</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/home">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/view_profile/{{ current_user.id }}">Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/search_users">Search users</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/search_rooms">Search rooms</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/contact_us">Contact us</a>
-                    </li>
-                    {% if current_user.status == "ADMIN" or current_user.status == "MASTER" %}
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/admin_messages">Admin messages</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
-
+{% block main %}
 <!-- Main -->
 <main class="row mt-5">
     <div class="col-sm-4">
