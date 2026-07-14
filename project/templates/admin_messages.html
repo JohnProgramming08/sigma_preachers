@@ -4,10 +4,21 @@
 <!-- Main -->
 <main class="row mt-5">
     <div class="col-sm-4">
+        <form onsubmit="return false;" class="d-flex">
+            <select class="form-select d-inl rounded-end-0" style="width: 70%;" id="filter-input">
+                <option value="0">All</option>
+                <option value="1">Report</option>
+                <option value="2">Feature Request</option>
+                <option value="3">Chatroom Request</option>
+                <option value="4">Bug</option>
+                <option value="5">Other</option>
+            </select>
+            <input type="submit" onclick="filter()" class="btn btn-primary rounded-start-0 d-inline" style="width: 30%;" value="Filter">
+        </form>
         <table class="col-sm-4 table table-hover">
             <tbody>
                 {% for message in messages %}
-                <tr onclick="getMessageData({{ message['id'] }})" style="cursor: pointer;">
+                <tr onclick="getMessageData({{ message['id'] }})" style="cursor: pointer;" class="{{ message['message_type'] }} admin-message">
                     <td class="d-flex flex-column">
                         <p class="text-primary mb-1"><b>{{ message["title"] }}</b></p>
                         <p class="ms-1 mb-1">Username: {{ message["username"] }}</p>

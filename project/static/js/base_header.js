@@ -25,6 +25,5 @@ const mapping = {
     "admin_messages": adminMessagesLink
 }
 
-console.log(page);
 const pageLink = mapping[page];
 pageLink.classList.add("active");
