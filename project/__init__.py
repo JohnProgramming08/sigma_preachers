@@ -59,6 +59,7 @@ def create_app(config_overlay=None):
         username = data["username"]
         room_name = data["room_name"]
         message = data["message"]
-        WebsocketService.message(username, room_name, message)
+        colour = data["colour"]
+        WebsocketService.message(username, room_name, message, colour)
 
     return socketio, app

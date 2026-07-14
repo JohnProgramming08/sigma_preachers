@@ -21,6 +21,7 @@ def edit_profile():
         "gender": form.gender.data,
         "age": form.age.data,
         "location": form.location.data,
+        "colour": form.colour.data,
         "bio": form.bio.data,
     }
     service = EditProfileService(current_user.id, form_data)

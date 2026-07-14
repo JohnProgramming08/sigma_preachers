@@ -180,7 +180,12 @@ def test_join(socketio_client):
 def test_message(socketio_client):
     socketio_client.emit(
         "message",
-        {"username": "Sigma", "message": "krillin' it", "room_name": "Global"},
+        {
+            "username": "Sigma",
+            "message": "krillin' it",
+            "room_name": "Global",
+            "colour": "Blue",
+        },
     )
     received = socketio_client.get_received()
 

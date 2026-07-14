@@ -8,7 +8,17 @@ class EditProfileService:
 
     # Update the users profile, returning if its a success
     def update_profile(self) -> bool:
-        if Select.username_exists(self.new_details.get("username")):
+        try:
+            username_changed = Select.select_user_with_id(
+                self.user_id
+            ).username != self.new_details.get("username")
+        except:
+            username_changed = False
+
+        if (
+            Select.username_exists(self.new_details.get("username"))
+            and username_changed
+        ):
             return False
 
         return Update.update_user_profile(self.user_id, self.new_details)

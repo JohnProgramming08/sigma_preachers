@@ -12,8 +12,10 @@ class WebsocketService:
 
     # Handle a user sending a message
     @staticmethod
-    def message(username: str, room_name: str, data: str) -> None:
-        message = {"sender": username, "message": data}
+    def message(
+        username: str, room_name: str, data: str, colour: str = "Blue"
+    ) -> None:
+        message = {"sender": username, "message": data, "colour": colour}
 
         emit("message", message, room=room_name)
 

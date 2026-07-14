@@ -53,6 +53,9 @@ class Select:
         if found_user is None:
             return None
 
+        if type(found_user.ban_end) == str:
+            return found_user
+
         found_user.ban_end = datetime.fromtimestamp(
             found_user.ban_end
         ).strftime("%d/%m/%Y")
@@ -241,7 +244,7 @@ class Select:
         )
 
         pairs = [
-            (message.user.username, message.content)
+            (message.user.username, message.content, message.user.colour)
             for message in found_messages
         ]
 

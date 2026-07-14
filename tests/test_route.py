@@ -226,21 +226,36 @@ def test_edit_profile_get_valid(one_logged_in_client):
 
 
 @pytest.mark.parametrize(
-    "username, gender, age, location, bio",
+    "username, gender, age, location, colour, bio",
     [
-        ("Sigumah", "Male", 18, "ur mums house", "creepy bio stalker istg"),
-        ("Nikki", "Female", 24, "my house", "What a sick bio"),
-        ("Dodo Dodo Dodo", "Bird", 124, "some island", "very deadeded"),
+        (
+            "Sigumah",
+            "Male",
+            18,
+            "ur mums house",
+            "Blue",
+            "creepy bio stalker istg",
+        ),
+        ("Nikki", "Female", 24, "my house", "Orange", "What a sick bio"),
+        (
+            "Dodo Dodo Dodo",
+            "Bird",
+            124,
+            "some island",
+            "Green",
+            "very deadeded",
+        ),
     ],
 )
 def test_edit_profile_post_valid(
-    one_logged_in_client, username, gender, age, location, bio
+    one_logged_in_client, username, gender, age, location, colour, bio
 ):
     data = {
         "username": username,
         "gender": gender,
         "age": age,
         "location": location,
+        "colour": colour,
         "bio": bio,
     }
     response = one_logged_in_client.post(

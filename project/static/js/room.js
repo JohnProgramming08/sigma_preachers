@@ -1,6 +1,7 @@
 const username = window.username;
 const roomName = window.room_name;
 const roomID = window.room_id;
+const colour = window.colour;
 const messages = document.getElementById("messages");
 const moreBtn = document.getElementById("more-btn");
 let pointer = 0;
@@ -13,14 +14,21 @@ socket.emit("join", {"username": username, "room_name": roomName});
 socket.on("message", function(data) {
     const contents = data["message"];
     const sender = data["sender"];
-    let colour = "text-primary";
+    const colourMap = {
+        "Blue": "primary",
+        "Orange": "warning",
+        "Black": "dark",
+        "Green": "success",
+        "Cyan": "info"
+    }
+    let displayColour = `text-${colourMap[data["colour"]]}`;
     if (sender == "SERVER") {
-        colour = "text-danger";
+        displayColour = "text-danger";
     }
 
     messages.innerHTML += `
     <div class="mb-3 d-flex flex-column p-3 bg-light rounded rounded=2" style="max-width: 67%; width: fit-content;">
-    <p class="${colour} text-break mb-1" style="width: fit-content3">${sender}</p>
+    <p class="${displayColour} text-break mb-1" style="width: fit-content3">${sender}</p>
     <p class="text-break mb-0" style="width: fit-content;">${contents}</p>
     <div>
     `;
@@ -37,7 +45,8 @@ function sendMessage() {
     const data = {
         "message": message,
         "username": username,
-        "room_name": roomName
+        "room_name": roomName,
+        "colour": colour
     };
     socket.send(data);
 
@@ -63,12 +72,21 @@ function getMessages() {
 
 
 function displayMessages(data) {
+    const colourMap = {
+        "Blue": "primary",
+        "Orange": "warning",
+        "Black": "dark",
+        "Green": "success",
+        "Cyan": "info"
+    }
+
     for (const message of data.message_list) {
-        const username = message[0]
-        const content = message[1]
+        const username = message[0];
+        const content = message[1];
+        const displayColour = `text-${colourMap[message[2]]}`;
         messages.innerHTML = `
         <div class="mb-3 d-flex flex-column p-3 bg-light rounded rounded=2" style="max-width: 67%; width: fit-content;">
-        <p class="text-primary text-break mb-1" style="width: fit-content3">${username}</p>
+        <p class="${displayColour} text-break mb-1" style="width: fit-content3">${username}</p>
         <p class="text-break mb-0" style="width: fit-content;">${content}</p>
         </div>
         ` + messages.innerHTML;

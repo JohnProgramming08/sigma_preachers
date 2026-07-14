@@ -15,6 +15,7 @@ class Update:
         user.age = new_details.get("age", None)
         user.location = new_details.get("location", None)
         user.bio = new_details.get("bio", None)
+        user.colour = new_details.get("colour", "primary")
 
         try:
             db.session.commit()

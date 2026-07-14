@@ -14,9 +14,10 @@
 </main>
 
 <script>
-    window.username = {{ current_user.username | tojson}};
-    window.room_name = {{ room_name  | tojson}};
+    window.username = {{ current_user.username | tojson }};
+    window.room_name = {{ room_name  | tojson }};
     window.room_id = {{ room_id | tojson }};
+    window.colour = {{ current_user.colour | tojson }};
 </script>
 <script src="{{ url_for('static', filename='js/room.js') }}"></script>
 {% endblock %}
