@@ -1,4 +1,4 @@
-from .about import about_bp
+from .index import index_bp
 from .signup import signup_bp
 from .login import login_bp
 from .home import home_bp
@@ -12,11 +12,12 @@ from .ban_user import ban_user_bp
 from .search_rooms import search_rooms_bp
 from .contact_us import contact_us_bp
 from .admin_messages import admin_messages_bp
+from .logout import logout_bp
 
 
 def register_blueprints(app):
     blueprints = [
-        about_bp,
+        index_bp,
         signup_bp,
         login_bp,
         home_bp,
@@ -30,6 +31,7 @@ def register_blueprints(app):
         search_rooms_bp,
         contact_us_bp,
         admin_messages_bp,
+        logout_bp,
     ]
 
     for bp in blueprints:

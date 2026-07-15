@@ -1,10 +1,17 @@
 import pytest
 
 
-# About page
-def test_about_get(client):
+# Index route
+def test_index_get_invalid(client):
     response = client.get("/")
-    assert response.status_code == 200
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_index_get_valid(one_logged_in_client):
+    response = one_logged_in_client.get("/")
+    assert response.status_code == 302
+    assert "/home" in response.headers["Location"]
 
 
 # Signup page
@@ -583,3 +590,16 @@ def test_admin_messages_dismiss_get_valid(
         f"/admin_messages/dismiss/{message_id}"
     )
     assert response.status_code == 200
+
+
+# Logout route
+def test_logout_get_invalid(many_hashed_users_client):
+    response = many_hashed_users_client.get("/logout")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_logout_get_valid(one_logged_in_client):
+    response = one_logged_in_client.get("/logout")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
