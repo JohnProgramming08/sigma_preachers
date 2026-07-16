@@ -21,19 +21,25 @@ def test_signup_get(client):
 
 
 @pytest.mark.parametrize(
-    "username, password",
+    "username, password, confirm_password",
     [
-        ("normal", "normal"),
-        ("valid", "normal"),
-        ("normal", "Valid"),
-        ("12345", "Normal"),
-        ("Some Space", "normal"),
-        ("Some Spacey wacey", "more space"),
-        ("valid", "valid"),
+        ("normal", "normal", "normal"),
+        ("valid", "normal", "normal"),
+        ("normal", "Valid", "Valid"),
+        ("12345", "Normal", "Normal"),
+        ("Some Space", "normal", "normal"),
+        ("Some Spacey wacey", "more space", "more space"),
+        ("valid", "valid", "valid"),
     ],
 )
-def test_signup_post_valid(many_hashed_users_client, username, password):
-    data = {"username": username, "password": password}
+def test_signup_post_valid(
+    many_hashed_users_client, username, password, confirm_password
+):
+    data = {
+        "username": username,
+        "password": password,
+        "confirm_password": confirm_password,
+    }
     response = many_hashed_users_client.post(
         "/signup", data=data, follow_redirects=False
     )
@@ -603,3 +609,50 @@ def test_logout_get_valid(one_logged_in_client):
     response = one_logged_in_client.get("/logout")
     assert response.status_code == 302
     assert "/login" in response.headers["Location"]
+
+
+# Change email page
+def test_change_email_get_invalid(many_hashed_users_client):
+    response = many_hashed_users_client.get("/change_email")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_change_email_get_valid(one_logged_in_client):
+    response = one_logged_in_client.get("/change_email")
+    assert response.status_code == 200
+
+
+# INVALID
+def test_change_email_post_valid(one_logged_in_client):
+    data = {"email": "dylan08test@gmail.com"}
+    # response = one_logged_in_client.post("/change_email", data=data)
+    # assert response.status_code == 302
+    # assert "/home" in response.headers["Location"]
+
+
+@pytest.mark.parametrize("email", ["nope", "67", ""])
+def test_change_email_post_invalid(one_logged_in_client, email):
+    data = {"email": email}
+    response = one_logged_in_client.post("/change_email", data=data)
+    assert response.status_code == 200
+
+
+# Verify email endpoint
+def test_verify_email_get_invalid1(many_hashed_users_client):
+    response = many_hashed_users_client.get("/change_email/verify/80085")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+@pytest.mark.parametrize("code", [80085, 42069, 000000, 123456, 6767])
+def test_verify_email_get_invalid2(many_unverified_emails_client, code):
+    response = many_unverified_emails_client.get(f"/change_email/verify/{code}")
+    assert response.status_code == 302
+    assert "/home" in response.headers["Location"]
+
+
+def test_verify_email_get_valid(many_unverified_emails_client):
+    response = many_unverified_emails_client.get("/change_email/verify/676767")
+    assert response.status_code == 302
+    assert "/view_profile" in response.headers["Location"]

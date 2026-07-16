@@ -194,3 +194,28 @@ def many_room_messages_app(many_hashed_users_app):
             Insert.insert_room_message(row[0], row[1], row[2])
 
     return many_hashed_users_app
+
+
+# App with 3 users with unverified email
+@pytest.fixture
+def many_unverified_emails_app(many_hashed_users_app):
+    data = [
+        (1, "sigma@gmail.com", 676767),
+        (2, "politics@joe.com", 80085),
+        (3, "last@one.co.uk", 42069),
+    ]
+    with many_hashed_users_app.app_context():
+        for row in data:
+            Update.update_user_email(row[0], row[1], row[2])
+
+    return many_hashed_users_app
+
+
+# Client with 3 users with unverified emails
+@pytest.fixture
+def many_unverified_emails_client(many_unverified_emails_app):
+    res_client = many_unverified_emails_app.test_client()
+    data = {"username": "Dylan", "password": "Sigma"}
+    res_client.post("/login", data=data)
+
+    return res_client

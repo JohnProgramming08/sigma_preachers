@@ -24,6 +24,9 @@ class User(UserMixin, db.Model):
     # Default for ban end should really be 0
     ban_end = db.Column(db.Integer, default=int(datetime.now().timestamp()))
     colour = db.Column(db.String(255), default="Blue", nullable=False)
+    email = db.Column(db.String(255))
+    email_verification_code = db.Column(db.Integer)
+    email_verified = db.Column(db.Boolean, nullable=False, default=False)
 
     room_access = db.relationship("RoomAccess", backref="user")
     admin_messages = db.relationship("AdminMessage", backref="user")

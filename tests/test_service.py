@@ -14,6 +14,7 @@ from project.services import (
     SearchRoomsService,
     ContactUsService,
     AdminMessagesService,
+    EmailService,
 )
 from project.database import User
 
@@ -577,3 +578,34 @@ def test_fetch_message_data_valid(many_admin_messages_app, message_id):
 def test_fetch_message_data_invalid(many_admin_messages_app, message_id):
     with many_admin_messages_app.app_context():
         assert AdminMessagesService.fetch_message_data(message_id) is None
+
+
+# EmailService
+# INACTIVE
+@pytest.mark.parametrize(
+    "subject, content",
+    [
+        ("Valid", "Also valid"),
+        (
+            "6767",
+            "This is a pretty long and cool one oh my god that is so cool 676767 so cool and sigma",
+        ),
+        ("6", "7"),
+    ],
+)
+def test_send_email(app, subject, content):
+    service = EmailService("dylan08test@gmail.com")
+    with app.app_context():
+        # response = service.send_email(subject, content)
+        # assert response.status_code == 200
+        pass
+
+
+# INACTIVE
+@pytest.mark.parametrize("url_root", ["valid", "little bit weird", "80085"])
+def test_send_verification_email(app, url_root):
+    service = EmailService("dylan08test@gmail.com")
+    with app.app_context():
+        # code = service.send_verification_email(url_root)
+        # assert code >= 100000 and code <= 999999
+        pass

@@ -5,6 +5,7 @@ from wtforms import (
     SubmitField,
     TextAreaField,
     SelectField,
+    EmailField,
 )
 from wtforms.validators import DataRequired, Length
 

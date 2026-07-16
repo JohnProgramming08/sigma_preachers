@@ -79,3 +79,32 @@ class Update:
         db.session.commit()
 
         return True
+
+    # Update the users email and email code, returning if it was a success
+    @staticmethod
+    def update_user_email(
+        user_id: int, new_email: str, verification_code: int
+    ) -> bool:
+        found_user = User.query.filter(User.id == user_id).first()
+        if found_user is None:
+            return False
+
+        found_user.email = new_email
+        found_user.email_verification_code = verification_code
+        db.session.commit()
+
+        return True
+
+    # Validate the users email verification code
+    @staticmethod
+    def validate_email_code(user_id: int, code: int) -> bool:
+        found_user = User.query.filter(User.id == user_id).first()
+        if found_user is None:
+            return False
+
+        if code == found_user.email_verification_code:
+            found_user.email_verified = True
+            return True
+
+        return False
+

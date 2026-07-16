@@ -114,3 +114,45 @@ def test_dismiss_many_admin_messages_valid(many_admin_messages_app):
 def test_dismiss_admin_message_invlaid(many_admin_messages_app, message_id):
     with many_admin_messages_app.app_context():
         assert Update.dismiss_admin_message(message_id) is False
+
+
+# Changing a users email and email code
+@pytest.mark.parametrize(
+    "user_id, email, code",
+    [
+        (1, "sigma@gmail.com", 676767),
+        (2, "anything really", 8008),
+        (3, "short", 1),
+    ],
+)
+def test_update_user_email_valid(many_hashed_users_app, user_id, email, code):
+    with many_hashed_users_app.app_context():
+        assert Update.update_user_email(user_id, email, code) is True
+
+
+@pytest.mark.parametrize("user_id", range(5, 11))
+def test_update_user_email_invalid(many_hashed_users_app, user_id):
+    with many_hashed_users_app.app_context():
+        assert (
+            Update.update_user_email(user_id, "sigma@gmail.com", 676767)
+            is False
+        )
+
+
+# Validating users email codes
+@pytest.mark.parametrize(
+    "user_id, code, valid",
+    [
+        (1, 676767, True),
+        (1, 6767, False),
+        (1, 80085, False),
+        (1, 123456, False),
+        (2, 80085, True),
+        (2, 5239646, False),
+        (3, 42069, True),
+        (3, 69420, False),
+    ],
+)
+def test_validate_email_code(many_unverified_emails_app, user_id, code, valid):
+    with many_unverified_emails_app.app_context():
+        assert Update.validate_email_code(user_id, code) is valid

@@ -46,6 +46,18 @@
                 <p class="mt-1 ms-2 mb-0">{{ user_details.colour }}</p>
             </div>
 
+            {% if user_details.email_verified and own_profile %}
+            <div class="d-flex flex-column row border py-2 mx-0 rounded mb-3" style="background-color: white;">
+                <p class="text-primary fw-bold ms-0 my-0">Recovery Email</p>
+                <p class="mt-1 ms-2 mb-0">{{ user_details.email }}</p>
+            </div>
+            {% elif own_profile %}
+            <div class="d-flex flex-column row border py-2 mx-0 rounded mb-3" style="background-color: white;">
+                <p class="text-primary fw-bold ms-0 my-0">Recovery Email</p>
+                <p class="mt-1 ms-2 mb-0">None</p>
+            </div>
+            {% endif %}
+
             <div class="d-flex flex-column row border py-2 mx-0 rounded" style="background-color: white;">
                 <p class="text-primary fw-bold ms-0 my-0">Bio</p>
                 <p class="mt-1 ms-2 mb-0 text-break">{{ user_details.bio }}</p>

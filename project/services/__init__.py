@@ -13,3 +13,5 @@ from .ban import BanService
 from .search_rooms import SearchRoomsService
 from .contact_us import ContactUsService
 from .admin_messages import AdminMessagesService
+from .change_email import ChangeEmailService
+from .email import EmailService
