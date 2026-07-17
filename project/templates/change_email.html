@@ -1,0 +1,66 @@
+{% extends "base_header.html" %}
+
+{% block main %}
+<!-- Main -->
+<main class="mt-4">
+    <div class="row d-flex justify-content-center mb-5">
+        <form method="POST" action="/change_email" class="bg-light rounded p-2 mb-5 col-sm-8">
+            {{ form.hidden_tag() }}
+            <div class="d-flex flex-column row border py-2 mx-0 rounded mb-3" style="background-color: white;">
+                <p class="text-primary fw-bold ms-0 my-0">Username</p>
+                <p class="mt-1 ms-2 mb-0">{{ current_user.username }}</p>
+            </div>
+
+            <div class="d-flex flex-column row border py-2 mx-0 rounded mb-3" style="background-color: white;">
+                <p class="text-primary fw-bold ms-0 my-0">Status</p>
+                <p class="mt-1 ms-2 mb-0">{{ current_user.status }}</p>
+            </div>
+
+            {% if current_user.status == "BANNED" %}
+            <div class="d-flex flex-column row border py-2 mx-0 rounded mb-3" style="background-color: white;">
+                <p class="text-primary fw-bold ms-0 my-0">Ban End</p>
+                <p class="mt-1 ms-2 mb-0">{{ current_user.ban_end }}</p>
+            </div>
+            {% endif %}
+
+            <div class="d-flex flex-column row border py-2 mx-0 rounded mb-3" style="background-color: white;">
+                <p class="text-primary fw-bold ms-0 my-0">Gender</p>
+                <p class="mt-1 ms-2 mb-0">{{ current_user.gender }}</p>
+            </div>
+
+            <div class="d-flex flex-column row border py-2 mx-0 rounded mb-3" style="background-color: white;">
+                <p class="text-primary fw-bold ms-0 my-0">Age</p>
+                {% if current_user.age == -1 %}
+                <p class="mt-1 ms-2 mb-0">private</p>
+                {% else %}
+                <p class="mt-1 ms-2 mb-0">{{ current_user.age }}</p>
+                {% endif %}
+            </div>
+
+            <div class="d-flex flex-column row border py-2 mx-0 rounded mb-3" style="background-color: white;">
+                <p class="text-primary fw-bold ms-0 my-0">Location</p>
+                <p class="mt-1 ms-2 mb-0">{{ current_user.location }}</p>
+            </div>
+
+            <div class="d-flex flex-column row border py-2 mx-0 rounded mb-3" style="background-color: white;">
+                <p class="text-primary fw-bold ms-0 my-0">Colour</p>
+                <p class="mt-1 ms-2 mb-0">{{ current_user.colour }}</p>
+            </div>
+
+            <div class="d-flex flex-column row border py-2 mx-0 rounded mb-3 pe-2" style="background-color: white;">
+                {{ form.email.label(class="text-primary fw-bold ms-0 my-0") }}
+                {{ form.email(class="mt-1 ms-2 mb-0 form-control", style="width: auto;") }}
+            </div>
+
+            <div class="d-flex flex-column row border py-2 mx-0 rounded mb-3" style="background-color: white;">
+                <p class="text-primary fw-bold ms-0 my-0">Bio</p>
+                <p class="mt-1 ms-2 mb-0 text-break">{{ current_user.bio }}</p>
+            </div>
+
+            <div class="row d-flex justify-content-center mx-0">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}

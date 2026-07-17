@@ -19,6 +19,8 @@ const mapping = {
     "edit_profile": profileLink,
     "ban_user": profileLink,
     "promote_user": profileLink,
+    "change_email": profileLink,
+    "verify": profileLink,
     "search_users": searchUsersLink,
     "search_rooms": searchRoomsLink,
     "contact_us": contactUsLink,

@@ -104,7 +104,7 @@ class Update:
 
         if code == found_user.email_verification_code:
             found_user.email_verified = True
+            db.session.commit()
             return True
 
         return False
-
