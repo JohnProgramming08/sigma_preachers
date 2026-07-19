@@ -28,7 +28,9 @@ class EmailService:
     # Send a password reset email, returning the reset code
     def send_password_reset_email(self, url_root: str, user_id: int) -> int:
         code = randint(100000, 999999)
-        reset_url = url_root + "/reset_password/" + str(user_id) + str(code)
+        reset_url = (
+            url_root + "/reset_password/" + str(user_id) + "/" + str(code)
+        )
 
         self.send_email("Reset your password", reset_url)
 

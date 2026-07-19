@@ -37,7 +37,9 @@ def reset_password(id: int, code: int):
     form = ResetPasswordForm()
     # User has not submitted a valid form
     if not form.validate_on_submit():
-        return render_template("reset_password.html", form=form, code=code)
+        return render_template(
+            "reset_password.html", form=form, code=code, id=id
+        )
 
     # User has submitted a valid form
     password = form.password.data
