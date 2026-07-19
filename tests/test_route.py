@@ -656,3 +656,99 @@ def test_verify_email_get_valid(many_unverified_emails_client):
     response = many_unverified_emails_client.get("/change_email/verify/676767")
     assert response.status_code == 302
     assert "/view_profile" in response.headers["Location"]
+
+
+# Submit username page
+def test_reset_passsword_username_get(two_verified_emails_client):
+    response = two_verified_emails_client.get("/reset_password/username")
+    assert response.status_code == 200
+
+
+# INVALID
+@pytest.mark.parametrize(
+    "username",
+    [
+        "Dylan",
+        "Sigma",
+        "With a space",
+        "with a space",
+        "Literally anything should work",
+    ],
+)
+def test_reset_password_username_post_valid(
+    two_verified_emails_client, username
+):
+    data = {"username": username}
+    # response = two_verified_emails_client.post(
+    #    "/reset_password/username", data=data
+    # )
+    # assert response.status_code == 302
+    # assert "/login" in response.headers["Location"]
+
+
+@pytest.mark.parametrize("username", ["", "1", "tw", "sig", "tim ", "    "])
+def test_reset_password_username_post_invalid(
+    two_verified_emails_client, username
+):
+    data = {"username": username}
+    response = two_verified_emails_client.post(
+        "/reset_password/username", data=data
+    )
+    assert response.status_code == 200
+
+
+# Reset password endpoint
+@pytest.mark.parametrize(
+    "id, code",
+    [
+        (1, 676767),
+        (1, 80085),
+        (1, 2946526),
+        (2, 234695),
+        (2, 80085),
+        (12345678, 8765321),
+    ],
+)
+def test_reset_password_get(two_verified_emails_client, id, code):
+    route = f"/reset_password/{id}/{code}"
+    response = two_verified_emails_client.get(route)
+    assert response.status_code == 200
+
+
+@pytest.mark.parametrize(
+    "id, code, password, confirm_password",
+    [
+        (1, 676767, "Labour", "Labour"),
+        (1, 80085, "Valid", "Valid"),
+        (2, 80085, "Ewww Reform", "Ewww Reform"),
+        (3, 53467898, "yyyyup", "yyyyup"),
+        (86547, 86785, "also cool", "also cool"),
+    ],
+)
+def test_reset_password_post_valid(
+    two_verified_emails_client, id, code, password, confirm_password
+):
+    route = f"/reset_password/{id}/{code}"
+    data = {"password": password, "confirm_password": confirm_password}
+    response = two_verified_emails_client.post(route, data=data)
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+@pytest.mark.parametrize(
+    "password, confirm_password",
+    [
+        ("tiny", "tiny"),
+        ("perfectly fine", "perfectly fin"),
+        ("completely", "different"),
+        ("tiny", "but completely fine"),
+        ("valid", "tiny"),
+    ],
+)
+def test_reset_password_post_invalid(
+    two_verified_emails_client, password, confirm_password
+):
+    route = "/reset_password/1/676767"
+    data = {"password": password, "confirm_password": confirm_password}
+    response = two_verified_emails_client.post(route, data=data)
+    assert response.status_code == 200

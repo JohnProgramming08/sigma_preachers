@@ -6,3 +6,4 @@ from .ban_user import BanUserForm
 from .add_room import AddRoomForm
 from .contact_us import ContactUsForm
 from .change_email import ChangeEmailForm
+from .reset_password import ResetPasswordForm, UsernameForm

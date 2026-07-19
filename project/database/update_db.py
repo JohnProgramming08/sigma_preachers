@@ -108,3 +108,33 @@ class Update:
             return True
 
         return False
+
+    # Update the users email code, returning if it was a success
+    @staticmethod
+    def update_email_code(user_id: str, code: int):
+        found_user = User.query.filter(User.id == user_id).first()
+        if found_user is None:
+            return False
+
+        found_user.email_verification_code = code
+        db.session.commit()
+
+        return True
+
+    # Update the users password if the verification code is correct
+    @staticmethod
+    def update_password(
+        user_id: int, new_password_hash: int, code: int
+    ) -> bool:
+        found_user = User.query.filter(User.id == user_id).first()
+        if found_user is None:
+            return False
+
+        correct_code = code == found_user.email_verification_code
+        if not correct_code:
+            return False
+
+        found_user.password = new_password_hash
+        db.session.commit()
+
+        return True

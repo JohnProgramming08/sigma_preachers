@@ -156,3 +156,39 @@ def test_update_user_email_invalid(many_hashed_users_app, user_id):
 def test_validate_email_code(many_unverified_emails_app, user_id, code, valid):
     with many_unverified_emails_app.app_context():
         assert Update.validate_email_code(user_id, code) is valid
+
+
+# Updating the users email code
+@pytest.mark.parametrize(
+    "user_id, code", [(1, 80085), (1, 676767), (1, 42069), (2, 123456), (3, 3)]
+)
+def test_update_email_code_valid(many_hashed_users_app, user_id, code):
+    with many_hashed_users_app.app_context():
+        assert Update.update_email_code(user_id, code) is True
+
+
+@pytest.mark.parametrize("user_id", range(5, 11))
+def test_update_email_code_invalid(many_hashed_users_app, user_id):
+    with many_hashed_users_app.app_context():
+        assert Update.update_email_code(user_id, 8008) is False
+
+
+# Updating the users password
+@pytest.mark.parametrize(
+    "user_id, new_password_hash, code",
+    [(1, 67, 676767), (1, 9876, 676767), (2, 80085, 80085), (3, 135791, 42069)],
+)
+def test_update_password_valid(
+    many_unverified_emails_app, user_id, new_password_hash, code
+):
+    with many_unverified_emails_app.app_context():
+        assert Update.update_password(user_id, new_password_hash, code) is True
+
+
+@pytest.mark.parametrize(
+    "user_id, code",
+    [(1, 80085), (1, 42069), (1, 676766), (1, 46), (2, 86777), (5, 42069)],
+)
+def test_update_password_invalid(many_unverified_emails_app, user_id, code):
+    with many_unverified_emails_app.app_context():
+        assert Update.update_password(user_id, 67, code) is False

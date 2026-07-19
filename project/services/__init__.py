@@ -15,3 +15,4 @@ from .contact_us import ContactUsService
 from .admin_messages import AdminMessagesService
 from .change_email import ChangeEmailService
 from .email import EmailService
+from .reset_password import ResetPasswordService

@@ -249,3 +249,8 @@ class Select:
         ]
 
         return {"pointer": pointer, "message_list": pairs}
+
+    # Return the user with the given username, None if nonexistant
+    @staticmethod
+    def select_user_with_username(username: str) -> User | None:
+        return User.query.filter(User.username == username).first()

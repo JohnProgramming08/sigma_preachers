@@ -14,6 +14,7 @@ from .contact_us import contact_us_bp
 from .admin_messages import admin_messages_bp
 from .logout import logout_bp
 from .change_email import change_email_bp
+from .reset_password import reset_password_bp
 
 
 def register_blueprints(app):
@@ -34,6 +35,7 @@ def register_blueprints(app):
         admin_messages_bp,
         logout_bp,
         change_email_bp,
+        reset_password_bp,
     ]
 
     for bp in blueprints:

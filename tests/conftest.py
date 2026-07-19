@@ -219,3 +219,20 @@ def many_unverified_emails_client(many_unverified_emails_app):
     res_client.post("/login", data=data)
 
     return res_client
+
+
+# App with two verified emails
+@pytest.fixture
+def two_verified_emails_app(many_unverified_emails_app):
+    with many_unverified_emails_app.app_context():
+        Update.validate_email_code(1, 676767)
+        Update.validate_email_code(2, 80085)
+
+    return many_unverified_emails_app
+
+
+# Client with two verified emails
+@pytest.fixture
+def two_verified_emails_client(two_verified_emails_app):
+    res_client = two_verified_emails_app.test_client()
+    return res_client

@@ -15,6 +15,7 @@ from project.services import (
     ContactUsService,
     AdminMessagesService,
     EmailService,
+    ResetPasswordService,
 )
 from project.database import User
 
@@ -609,3 +610,86 @@ def test_send_verification_email(app, url_root):
         # code = service.send_verification_email(url_root)
         # assert code >= 100000 and code <= 999999
         pass
+
+
+# INACTIVE
+@pytest.mark.parametrize(
+    "url_root", ["Valid", "little bit weird", "80085 so funny"]
+)
+def test_send_password_reset_email(app, url_root):
+    service = EmailService("dylan08test@gmail.com")
+    with app.app_context():
+        # code = service.send_password_reset_email(url_root)
+        # assert 100000 <= code <= 999999
+        pass
+
+
+# ResetPasswordService
+# INACTIVE
+@pytest.mark.parametrize(
+    "username, url_root",
+    [("Dylan", "literally anything ong ong"), ("With a space", "Labour")],
+)
+def test_send_verification_email_valid(
+    two_verified_emails_app, username, url_root
+):
+    with two_verified_emails_app.app_context():
+        # assert (
+        # ResetPasswordService.send_verification_email(username, url_root)
+        # is True
+        # )
+        pass
+
+
+@pytest.mark.parametrize(
+    "username, url_root",
+    [("Valid", "Green"), ("Not it ong ong", "fine"), ("MASTER", "also fine")],
+)
+def test_send_verification_email_invalid(
+    two_verified_emails_app, username, url_root
+):
+    with two_verified_emails_app.app_context():
+        assert (
+            ResetPasswordService.send_verification_email(username, url_root)
+            is False
+        )
+
+
+@pytest.mark.parametrize(
+    "user_id, code, new_password",
+    [
+        (1, 676767, "Valid"),
+        (1, 676767, "Sigma"),
+        (1, 676767, "L1t3r411y anything ong ong"),
+        (2, 80085, "Ong anything"),
+        (3, 42069, "should work"),
+    ],
+)
+def test_reset_password_valid(
+    two_verified_emails_app, user_id, code, new_password
+):
+    with two_verified_emails_app.app_context():
+        assert (
+            ResetPasswordService.reset_password(user_id, code, new_password)
+            is True
+        )
+
+
+@pytest.mark.parametrize(
+    "user_id, code, new_password",
+    [
+        (1, 1234, "Valid"),
+        (1, 67676, "also fine"),
+        (1, 80085, "anything is fine"),
+        (5, 1234567, "Whatever"),
+        (9999, 676767, "big numbers"),
+    ],
+)
+def test_reset_password_invalid(
+    two_verified_emails_app, user_id, code, new_password
+):
+    with two_verified_emails_app.app_context():
+        assert (
+            ResetPasswordService.reset_password(user_id, code, new_password)
+            is False
+        )

@@ -263,3 +263,19 @@ def test_select_10_room_messages(
             "message_list"
         ]
         assert len(messages) == length
+
+
+# Fetching the user with the given username
+@pytest.mark.parametrize("username", ["Dylan", "With a space", "Sk8er boi"])
+def test_select_user_with_username_valid(many_unhashed_users_app, username):
+    with many_unhashed_users_app.app_context():
+        assert Select.select_user_with_username(username) is not None
+
+
+@pytest.mark.parametrize(
+    "username",
+    ["Invalid", "Dyla", "With a space ", "Defo not it gng icl ong ong", "1"],
+)
+def test_select_user_with_username_invalid(many_unhashed_users_app, username):
+    with many_unhashed_users_app.app_context():
+        assert Select.select_user_with_username(username) is None

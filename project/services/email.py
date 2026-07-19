@@ -24,13 +24,12 @@ class EmailService:
 
         return code
 
-    # DO NOT TEST YET
+    # Needs testing
     # Send a password reset email, returning the reset code
-    def send_password_reset_email(self):
+    def send_password_reset_email(self, url_root: str, user_id: int) -> int:
         code = randint(100000, 999999)
-        self.send_email(
-            "Reset your password",
-            f"Enter this code to reset your password: {code}",
-        )
+        reset_url = url_root + "/reset_password/" + str(user_id) + str(code)
+
+        self.send_email("Reset your password", reset_url)
 
         return code
