@@ -17,6 +17,11 @@ def room(room_id):
 
     # User is not banned
     service = RoomService(room_id)
+    if not service.has_access(current_user.id):
+        flash("You do not have access to that room.", "danger")
+        return redirect(url_for("home.home"))
+
+    # User has access to room
     room = service.get_room()
 
     return render_template(

@@ -195,3 +195,44 @@ def test_insert_many_room_messages(app):
     with app.app_context():
         for row in data:
             assert Insert.insert_room_message(row[0], row[1], row[2]) is True
+
+
+# Inserting a private room for 2 users
+@pytest.mark.parametrize(
+    "user_id1, user_id2", [(1, 2), (1, 3), (2, 1), (2, 3), (3, 1), (3, 2)]
+)
+def test_insert_one_private_room_valid(
+    many_hashed_users_app, user_id1, user_id2
+):
+    with many_hashed_users_app.app_context():
+        assert Insert.insert_private_room(user_id1, user_id2) == 2
+
+
+def test_insert_many_private_rooms_valid(many_hashed_users_app):
+    data = [(1, 2), (1, 3), (2, 1), (2, 3), (3, 1), (3, 2)]
+    with many_hashed_users_app.app_context():
+        for i, pair in enumerate(data):
+            assert Insert.insert_private_room(pair[0], pair[1]) == i + 2
+
+
+@pytest.mark.parametrize(
+    "user_id1, user_id2",
+    [
+        (1, 2),
+        (1, 3),
+        (2, 1),
+        (2, 3),
+        (3, 1),
+        (3, 2),
+        (5, 1),
+        (1, 5),
+        (5, 5),
+        (768, 856),
+    ],
+)
+def test_insert_private_rooms_invalid(
+    many_hashed_users_app, user_id1, user_id2
+):
+    with many_hashed_users_app.app_context():
+        Insert.insert_private_room(user_id1, user_id2)
+        assert Insert.insert_private_room(user_id1, user_id2) == -1

@@ -12,3 +12,7 @@ class HomeService:
     # Create a new public chatroom, returning its id
     def create_room(self, room_name: str) -> int:
         return Insert.insert_room(room_name)
+
+    # Fetch all of the users private rooms
+    def fetch_private_rooms(self) -> list:
+        return Select.select_private_rooms(self.user_id)

@@ -236,3 +236,26 @@ def two_verified_emails_app(many_unverified_emails_app):
 def two_verified_emails_client(two_verified_emails_app):
     res_client = two_verified_emails_app.test_client()
     return res_client
+
+
+# App with three accessible private rooms
+@pytest.fixture
+def many_private_rooms_app(many_hashed_users_app):
+    with many_hashed_users_app.app_context():
+        Insert.insert_private_room(1, 2)
+        Insert.insert_private_room(2, 3)
+        Insert.insert_private_room(1, 3)
+
+    return many_hashed_users_app
+
+
+# Client with one room access
+@pytest.fixture
+def one_room_access_client(one_room_access_app):
+    res_client = one_room_access_app.test_client()
+    res_client.post(
+        "/login",
+        data={"username": "Dylan", "password": "Sigma"},
+    )
+
+    return res_client

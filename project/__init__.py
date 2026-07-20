@@ -42,6 +42,7 @@ def create_app(config_overlay=None):
     # Implement specific websocket logic
     socketio = SocketIO(app)
 
+    # Public chat rooms
     @socketio.on("join")
     def handle_join(data):
         username = data["username"]
@@ -61,5 +62,11 @@ def create_app(config_overlay=None):
         message = data["message"]
         colour = data["colour"]
         WebsocketService.message(username, room_name, message, colour)
+
+    # Private rooms
+    @socketio.on("join_private")
+    def handle_join_private(data):
+        room_name = data["room_name"]
+        WebsocketService.join_private_room(room_name)
 
     return socketio, app

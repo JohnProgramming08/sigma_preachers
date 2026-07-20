@@ -36,7 +36,9 @@ class Select:
 
         rooms = []
         for room in accessible_rooms:
-            rooms.append(Room.query.filter(Room.id == room.room_id).first())
+            found_room = Room.query.filter(Room.id == room.room_id).first()
+            if found_room.public:
+                rooms.append(found_room)
 
         return rooms
 
@@ -254,3 +256,26 @@ class Select:
     @staticmethod
     def select_user_with_username(username: str) -> User | None:
         return User.query.filter(User.username == username).first()
+
+    # Select all private rooms that the user can access
+    def select_private_rooms(user_id: int) -> list:
+        accessible_rooms = RoomAccess.query.filter(
+            RoomAccess.user_id == user_id
+        ).all()
+
+        res = []
+        for room in accessible_rooms:
+            found_room = Room.query.filter(Room.id == room.room_id).first()
+            if not found_room.public:
+                res.append(found_room)
+
+        return res
+
+    # Return whether or not the user has access to the given room
+    @staticmethod
+    def has_room_access(user_id: int, room_id: int) -> bool:
+        found_access = RoomAccess.query.filter(
+            (RoomAccess.room_id == room_id) & (RoomAccess.user_id == user_id)
+        ).first()
+
+        return found_access != None

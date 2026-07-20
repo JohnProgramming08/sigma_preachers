@@ -16,3 +16,7 @@ class RoomService:
     # Fetch the next 10 messages in the room
     def fetch_10_messages(self, pointer: int = 0) -> dict:
         return Select.select_10_room_messages(self.room_id, pointer)
+
+    # Determine if the user has access to the room
+    def has_access(self, user_id: int) -> bool:
+        return Select.has_room_access(user_id, self.room_id)

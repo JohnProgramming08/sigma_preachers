@@ -33,3 +33,8 @@ class WebsocketService:
             room=room_name,
             include_self=False,
         )
+
+    # Handle a user joining a private room
+    @staticmethod
+    def join_private_room(room_name: str) -> None:
+        join_room(room_name)

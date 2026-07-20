@@ -38,6 +38,7 @@ class Room(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     room_name = db.Column(db.String(67), unique=True, nullable=False)
+    public = db.Column(db.Boolean, default=True)
 
     room_access = db.relationship("RoomAccess", backref="room")
     room_message = db.relationship("RoomMessage", backref="room")

@@ -279,3 +279,31 @@ def test_select_user_with_username_valid(many_unhashed_users_app, username):
 def test_select_user_with_username_invalid(many_unhashed_users_app, username):
     with many_unhashed_users_app.app_context():
         assert Select.select_user_with_username(username) is None
+
+
+# Fetching all private rooms a user can access
+@pytest.mark.parametrize("user_id", range(1, 4))
+def test_select_private_rooms_valid(many_private_rooms_app, user_id):
+    with many_private_rooms_app.app_context():
+        assert len(Select.select_private_rooms(user_id)) == 2
+
+
+@pytest.mark.parametrize("user_id", range(4, 11))
+def test_select_private_rooms_invalid(many_private_rooms_app, user_id):
+    with many_private_rooms_app.app_context():
+        assert len(Select.select_private_rooms(user_id)) == 0
+
+
+# Determining if a user can access a room
+def test_has_room_access_valid(one_room_access_app):
+    with one_room_access_app.app_context():
+        assert Select.has_room_access(1, 1) is True
+
+
+@pytest.mark.parametrize(
+    "user_id, room_id",
+    [(1, 2), (2, 1), (1, 5027435), (5237542, 1), (854475, 43252)],
+)
+def test_has_room_access_invalid(one_room_access_app, user_id, room_id):
+    with one_room_access_app.app_context():
+        assert Select.has_room_access(user_id, room_id) is False

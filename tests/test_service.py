@@ -170,6 +170,20 @@ def test_create_room_invalid(one_room_access_app):
         assert service.create_room("sigma central") == -1
 
 
+@pytest.mark.parametrize("user_id", range(1, 4))
+def test_fetch_private_rooms_valid(many_private_rooms_app, user_id):
+    service = HomeService(user_id)
+    with many_private_rooms_app.app_context():
+        assert len(service.fetch_private_rooms()) == 2
+
+
+@pytest.mark.parametrize("user_id", range(4, 11))
+def test_fetch_private_rooms_invalid(many_private_rooms_app, user_id):
+    service = HomeService(user_id)
+    with many_private_rooms_app.app_context():
+        assert len(service.fetch_private_rooms()) == 0
+
+
 # WebsocketService
 def test_join(socketio_client):
     socketio_client.emit("join", {"username": "Sigma", "room_name": "Global"})
@@ -177,6 +191,13 @@ def test_join(socketio_client):
 
     assert received[0]["name"] == "message"
     assert received[0]["args"]["message"] == "Sigma joined the chat"
+
+
+def test_join_private(socketio_client):
+    socketio_client.emit("join_private", {"room_name": "Global"})
+    received = socketio_client.get_received()
+
+    assert received == []
 
 
 def test_message(socketio_client):
@@ -265,6 +286,23 @@ def test_fetch_10_messages(many_room_messages_app, room_id, pointer, length):
     with many_room_messages_app.app_context():
         messages = service.fetch_10_messages(pointer)["message_list"]
         assert len(messages) == length
+
+
+# Determining if a user can access a room
+def test_has_room_access_valid(one_room_access_app):
+    service = RoomService(1)
+    with one_room_access_app.app_context():
+        assert service.has_access(1) is True
+
+
+@pytest.mark.parametrize(
+    "user_id, room_id",
+    [(1, 2), (2, 1), (1, 5027435), (5237542, 1), (854475, 43252)],
+)
+def test_has_room_access_invalid(one_room_access_app, user_id, room_id):
+    service = RoomService(room_id)
+    with one_room_access_app.app_context():
+        assert service.has_access(user_id) is False
 
 
 # ViewProfileService

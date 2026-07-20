@@ -161,8 +161,8 @@ def test_room_get_invalid(many_hashed_users_client):
     assert "/login" in response.headers["Location"]
 
 
-def test_room_get_valid(one_logged_in_client):
-    response = one_logged_in_client.get("/room/1", follow_redirects=False)
+def test_room_get_valid(one_room_access_client):
+    response = one_room_access_client.get("/room/1", follow_redirects=False)
     assert response.status_code == 200
 
 
@@ -222,6 +222,32 @@ def test_view_profile_get_valid(one_logged_in_client):
         "/view_profile/2", follow_redirects=False
     )
     assert response.status_code == 200
+
+
+# Start private message endpoint
+def test_private_message_get_invalid1(many_hashed_users_client):
+    response = many_hashed_users_client.get("/view_profile/private_message/1")
+    assert response.status_code == 302
+    assert "/login" in response.headers["Location"]
+
+
+def test_private_message_get_invalid2(one_logged_in_client):
+    one_logged_in_client.get("/view_profile/private_message/2")
+    response = one_logged_in_client.get("/view_profile/private_message/2")
+    assert response.status_code == 302
+    assert "/view_profile/2" in response.headers["Location"]
+
+
+def test_private_message_get_invalid3(one_logged_in_client):
+    response = one_logged_in_client.get("/view_profile/private_message/6")
+    assert response.status_code == 302
+    assert "/view_profile/6" in response.headers["Location"]
+
+
+def test_private_message_get_valid(one_logged_in_client):
+    response = one_logged_in_client.get("/view_profile/private_message/2")
+    assert response.status_code == 302
+    assert "/room" in response.headers["Location"]
 
 
 # Edit profile page

@@ -11,9 +11,15 @@ home_bp = Blueprint("home", __name__)
 def home():
     service = HomeService(current_user.id)
     rooms = service.fetch_accessible_rooms()
+    private_rooms = service.fetch_private_rooms()
     room_form = AddRoomForm()
 
-    return render_template("home.html", rooms=rooms, room_form=room_form)
+    return render_template(
+        "home.html",
+        rooms=rooms,
+        room_form=room_form,
+        private_rooms=private_rooms,
+    )
 
 
 @home_bp.route("/add_room", methods=["POST"])
