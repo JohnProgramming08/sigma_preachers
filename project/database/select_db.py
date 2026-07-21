@@ -267,7 +267,15 @@ class Select:
         for room in accessible_rooms:
             found_room = Room.query.filter(Room.id == room.room_id).first()
             if not found_room.public:
-                res.append(found_room)
+                room_name = (
+                    RoomAccess.query.filter(
+                        (RoomAccess.room_id == room.room_id)
+                        & (RoomAccess.user_id != user_id)
+                    )
+                    .first()
+                    .user.username
+                )
+                res.append([found_room.id, room_name])
 
         return res
 
