@@ -2,13 +2,19 @@ const username = window.username;
 const roomName = window.room_name;
 const roomID = window.room_id;
 const colour = window.colour;
+const public = window.public;
 const messages = document.getElementById("messages");
 const moreBtn = document.getElementById("more-btn");
+const nameDisplay = document.getElementById("room-name");
 let pointer = 0;
 
 let socket = io();
 
-socket.emit("join", {"username": username, "room_name": roomName});
+if (public) {
+    socket.emit("join", {"username": username, "room_name": roomName});
+} else {
+    socket.emit("join_private", {"room_name": roomName});
+}
 
 // Messages sent by server
 socket.on("message", function(data) {
@@ -99,5 +105,18 @@ function displayMessages(data) {
     }
 }
 
-getMessages()
+function displayRoomName() {
+    if (public) {
+        return 67;
+    }
 
+    const usernames = roomName.split("_");
+    if (usernames[0] == username) {
+        nameDisplay.innerHTML = usernames[1];
+    } else {
+        nameDisplay.innerHTML = usernames[0];
+    }
+}
+
+displayRoomName();
+getMessages();

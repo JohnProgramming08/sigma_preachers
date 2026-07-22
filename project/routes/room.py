@@ -25,7 +25,10 @@ def room(room_id):
     room = service.get_room()
 
     return render_template(
-        "room.html", room_name=room.room_name, room_id=room_id
+        "room.html",
+        room_name=room.room_name,
+        room_id=room_id,
+        public=room.public,
     )
 
 
