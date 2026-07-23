@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from .hash import HashService
 from project.database import Select, Insert, Update
 
@@ -6,8 +8,9 @@ class PopulateService:
     # Attempt to add a master user
     @staticmethod
     def add_master() -> bool:
-        username = "MASTER"
-        hashed_password = HashService.hash("MASTER")
+        load_dotenv()
+        username = os.getenv("master_username")
+        hashed_password = HashService.hash(os.getenv("master_password"))
 
         if Select.username_exists(username):
             return False

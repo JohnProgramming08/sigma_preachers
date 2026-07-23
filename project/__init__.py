@@ -13,7 +13,7 @@ def create_app(config_overlay=None):
     load_dotenv()
 
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///sigma_preachers.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("database_uri")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # Default configuration

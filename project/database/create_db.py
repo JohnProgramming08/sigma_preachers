@@ -57,7 +57,7 @@ class AdminMessageType(db.Model):
     __tablename__ = "admin_message_types"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(10), nullable=False, unique=True)
+    name = db.Column(db.String(25), nullable=False, unique=True)
 
     admin_messages = db.relationship("AdminMessage", backref="message_type")
 
